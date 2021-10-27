@@ -8,6 +8,7 @@ import 'package:firebase/services/database.dart';
 import 'package:firebase/services/image.dart';
 import 'package:firebase/services/location.dart';
 import 'package:firebase/shared/constants.dart';
+import 'package:firebase/shared/image_display.dart';
 import 'package:firebase/shared/image_loader.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,12 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
         });
       });
     });
+  }
+
+  void showImage() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ImageDisplay(image: _image!),
+    ));
   }
 
   void calculateDistance(Location from, Location to) {
@@ -221,17 +228,18 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
           padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
           child: Column(
             children: [
-              _image ??
-                  ImageLoader(
-                    color: Colors.orange,
-                    background: HorticadeTheme.scaffoldBackground!,
-                  ),
+              _image != null
+                  ? GestureDetector(child: _image!, onTap: showImage)
+                  : ImageLoader(
+                      color: Colors.orange,
+                      background: HorticadeTheme.scaffoldBackground!,
+                    ),
               formTextSpacer,
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      'Price: R${widget.product.cost}',
+                      'Price: ${c(widget.product.cost)}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -250,62 +258,43 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
                             ),
                           ),
                   ),
-                  Expanded(
-                    child: _distance != null
-                        ? Text('$_distance away',
-                            textAlign: TextAlign.end,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ))
-                        : const Text('Calculating distance...'),
-                  ),
                 ],
               ),
               Form(
                 key: _dailogFormKey,
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              label: Text('Qty'),
-                              hintText: 'Quantity to order',
-                            ),
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'Qty Required';
-                              } else if (!RegExp(r'^\d+$').hasMatch(val)) {
-                                return 'Invalid Qty';
-                              } else if (int.parse(val) <= 0) {
-                                return 'Cannot be 0';
-                              } else if (widget.product.qty <= 0) {
-                                return 'Item is out of stock';
-                              } else if (int.parse(val) > widget.product.qty) {
-                                return 'Qty is more than in stock';
-                              }
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        label: Text('Order Quantity'),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return 'Qty Required';
+                        } else if (!RegExp(r'^\d+$').hasMatch(val)) {
+                          return 'Invalid Qty';
+                        } else if (int.parse(val) <= 0) {
+                          return 'Cannot be 0';
+                        } else if (widget.product.qty <= 0) {
+                          return 'Item is out of stock';
+                        } else if (int.parse(val) > widget.product.qty) {
+                          return 'Qty is more than in stock';
+                        }
 
-                              return null;
-                            },
-                            onChanged: (val) => _qty = val,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: DeliveryDateRow(
-                            deliveryDate: deliveryDate,
-                            set: _setDeliveryDate,
-                            unset: () {
-                              setState(() {
-                                deliveryDate = null;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                        return null;
+                      },
+                      onChanged: (val) => _qty = val,
+                    ),
+                    formTextSpacer,
+                    DeliveryDateRow(
+                      deliveryDate: deliveryDate,
+                      set: _setDeliveryDate,
+                      unset: () {
+                        setState(() {
+                          deliveryDate = null;
+                        });
+                      },
                     ),
                     Column(
                       children: [
@@ -329,9 +318,44 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
                                   ),
                                 ],
                               ),
-                        _useDefaultAddress
-                            ? Text('Deliver to: ${_entity?.location.address}')
-                            : Text('Deliver to: ${deliveryLocation?.address}'),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 9,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Deliver to',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                      '${_useDefaultAddress ? _entity?.location.address : deliveryLocation?.address}'),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: _distance != null
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Distance',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                        Text(_distance!),
+                                      ],
+                                    )
+                                  : Loader(
+                                      color: Colors.orange,
+                                      background:
+                                          HorticadeTheme.scaffoldBackground!,
+                                    ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -346,24 +370,30 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
                   : Row(children: [
                       Expanded(
                         flex: 6,
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Cancel',
-                            style: HorticadeTheme.actionButtonTextStyle,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
+                          child: ElevatedButton(
+                            child: const Text(
+                              'Cancel',
+                              style: HorticadeTheme.actionButtonTextStyle,
+                            ),
+                            onPressed: () => Navigator.of(context).pop(null),
+                            style: HorticadeTheme.actionButtonTheme,
                           ),
-                          onPressed: () => Navigator.of(context).pop(null),
-                          style: HorticadeTheme.actionButtonTheme,
                         ),
                       ),
                       Expanded(
                         flex: 6,
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Place Order',
-                            style: HorticadeTheme.actionButtonTextStyle,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(2.5, 0, 0, 0),
+                          child: ElevatedButton(
+                            child: const Text(
+                              'Place Order',
+                              style: HorticadeTheme.actionButtonTextStyle,
+                            ),
+                            onPressed: _placeOrder,
+                            style: HorticadeTheme.actionButtonTheme,
                           ),
-                          onPressed: _placeOrder,
-                          style: HorticadeTheme.actionButtonTheme,
                         ),
                       ),
                     ]),
@@ -388,12 +418,7 @@ class DeliveryDateRow extends StatelessWidget {
   Widget build(BuildContext context) {
     if (deliveryDate == null) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Text('Delivery Date'),
-          const SizedBox(
-            width: 10.0,
-          ),
           ElevatedButton(
             onPressed: set,
             child: const Text(
@@ -402,42 +427,29 @@ class DeliveryDateRow extends StatelessWidget {
             ),
             style: HorticadeTheme.actionButtonTheme,
           ),
+          const SizedBox(
+            width: 10.0,
+          ),
+          const Text('Delivery Date'),
         ],
       );
     } else {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text('Req. delivery date: ${d(deliveryDate!)}'),
+          ElevatedButton(
+            onPressed: unset,
+            child: const Text(
+              'Unset',
+              style: HorticadeTheme.actionButtonTextStyle,
+            ),
+            style: HorticadeTheme.actionButtonTheme,
+          ),
           const SizedBox(
             width: 10.0,
           ),
-          ElevatedButton(
-            onPressed: unset,
-            child: const Text('Unset'),
-          ),
+          Text('Req. delivery date: ${d(deliveryDate!)}'),
         ],
       );
     }
-  }
-}
-
-class DeliveryAddress extends StatelessWidget {
-  final bool useDefaultAddress;
-  final dynamic toggleDefault;
-  final dynamic addressChanged;
-
-  const DeliveryAddress({
-    Key? key,
-    required this.useDefaultAddress,
-    required this.toggleDefault,
-    required this.addressChanged,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [],
-    );
   }
 }

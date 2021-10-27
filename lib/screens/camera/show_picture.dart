@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase/shared/image_display.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class ShowPicture extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.center,
-            child: Image.file(File(path)),
+            child: ImageDisplay(image: Image.file(File(path))),
           ),
           Align(
             alignment: Alignment.bottomRight,
@@ -32,7 +33,7 @@ class ShowPicture extends StatelessWidget {
           Align(
             alignment: Alignment.bottomLeft,
             child: IconButton(
-              color: Colors.black,
+              color: Colors.grey,
               iconSize: 70.00,
               onPressed: () {
                 Navigator.of(context).pop(false);

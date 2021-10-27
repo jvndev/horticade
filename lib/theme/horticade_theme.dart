@@ -22,6 +22,7 @@ class HorticadeTheme {
   static final cardColor = Colors.green[900];
   static const cardTitleTextStyle = TextStyle(color: Colors.orange);
   static const cardSubTitleTextStyle = TextStyle(color: Colors.orangeAccent);
+  static const cardTrailingTextStyle = TextStyle(color: Colors.orange);
   static final checkBoxActive = Colors.grey[700];
   static const datePickerPrimary = Color(0xFF616161);
 

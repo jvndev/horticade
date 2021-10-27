@@ -1,5 +1,6 @@
 import 'package:firebase/models/product.dart';
 import 'package:firebase/services/image.dart';
+import 'package:firebase/shared/constants.dart';
 import 'package:firebase/shared/image_loader.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _ProductCardState extends State<ProductCard> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'R${widget.product.cost}',
+              c(widget.product.cost),
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.orange,

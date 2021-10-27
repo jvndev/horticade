@@ -3,6 +3,7 @@ import 'package:firebase/models/order.dart';
 import 'package:firebase/services/database.dart';
 import 'package:firebase/services/location.dart';
 import 'package:firebase/shared/constants.dart';
+import 'package:firebase/shared/loader.dart';
 import 'package:firebase/theme/horticade_order_line.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
@@ -51,8 +52,6 @@ class _OrderDetailsState extends State<OrderDetails> {
         children: [
           formTextSpacer,
           HorticadeOrderLine(
-              heading: 'Deliver to', details: widget.order.location.address),
-          HorticadeOrderLine(
             heading: 'Category',
             details: widget.order.product.category.name,
           ),
@@ -61,8 +60,13 @@ class _OrderDetailsState extends State<OrderDetails> {
             details: widget.order.product.name,
           ),
           HorticadeOrderLine(
-            heading: 'Date Created',
-            details: dt(widget.order.created),
+              heading: 'Deliver to', details: widget.order.location.address),
+          HorticadeOrderLine(
+            heading: 'Distance',
+            details: _distance ??
+                Loader(
+                    color: Colors.orange,
+                    background: HorticadeTheme.scaffoldBackground!),
           ),
           HorticadeOrderLine(
             heading: 'Deliver By',
@@ -70,27 +74,21 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ? 'Not Specified'
                 : d(widget.order.deliverBy!),
           ),
-          Row(
-            children: [
-              Expanded(
-                flex: 6,
-                child: HorticadeOrderLine(
-                  heading: 'Qty',
-                  details: '${widget.order.qty}',
-                ),
-              ),
-              Expanded(
-                flex: 6,
-                child: HorticadeOrderLine(
-                  heading: 'Price',
-                  details: 'R${widget.order.product.cost}',
-                ),
-              ),
-            ],
+          HorticadeOrderLine(
+            heading: 'Date Created',
+            details: dt(widget.order.created),
           ),
           HorticadeOrderLine(
-            heading: 'Distance',
-            details: _distance ?? 'Calculating distance...',
+            heading: 'Quantity',
+            details: '${widget.order.qty}',
+          ),
+          HorticadeOrderLine(
+            heading: 'Cost per Unit',
+            details: c(widget.order.product.cost),
+          ),
+          HorticadeOrderLine(
+            heading: 'Total',
+            details: c(widget.order.qty * widget.order.product.cost),
           ),
         ],
       ),

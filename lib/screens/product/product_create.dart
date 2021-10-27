@@ -211,41 +211,50 @@ class _ProductCreateState extends State<ProductCreate> {
                           children: [
                             Expanded(
                               flex: 6,
-                              child: TextFormField(
-                                validator: (price) {
-                                  if (price == null || price.isEmpty) {
-                                    return 'Price is required';
-                                  }
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
+                                child: TextFormField(
+                                  validator: (price) {
+                                    if (price == null || price.isEmpty) {
+                                      return 'Price is required';
+                                    }
 
-                                  if (!RegExp(r'^\d+\.?\d{0,2}$')
-                                      .hasMatch(price) || double.parse(price) <= 0) {
-                                    return 'Invalid price.';
-                                  }
+                                    if (!RegExp(r'^\d+\.?\d{0,2}$')
+                                            .hasMatch(price) ||
+                                        double.parse(price) <= 0) {
+                                      return 'Invalid price.';
+                                    }
 
-                                  return null;
-                                },
-                                decoration: textFieldDecoration('Price'),
-                                controller: costController,
-                                keyboardType: TextInputType.number,
+                                    return null;
+                                  },
+                                  decoration: textFieldDecoration('Price'),
+                                  controller: costController,
+                                  keyboardType: TextInputType.number,
+                                ),
                               ),
                             ),
                             Expanded(
                               flex: 6,
-                              child: TextFormField(
-                                validator: (qty) {
-                                  if (qty == null || qty.isEmpty) {
-                                    return 'Qty is required';
-                                  }
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(2.5, 0, 0, 0),
+                                child: TextFormField(
+                                  validator: (qty) {
+                                    if (qty == null || qty.isEmpty) {
+                                      return 'Qty is required';
+                                    }
 
-                                  if (!RegExp(r'^\d+$').hasMatch(qty)) {
-                                    return 'Invalid quantity.';
-                                  }
+                                    if (!RegExp(r'^\d+$').hasMatch(qty)) {
+                                      return 'Invalid quantity.';
+                                    }
 
-                                  return null;
-                                },
-                                decoration: textFieldDecoration('Qty'),
-                                controller: qtyController,
-                                keyboardType: TextInputType.number,
+                                    return null;
+                                  },
+                                  decoration: textFieldDecoration('Qty'),
+                                  controller: qtyController,
+                                  keyboardType: TextInputType.number,
+                                ),
                               ),
                             ),
                           ],

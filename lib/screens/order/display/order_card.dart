@@ -52,8 +52,29 @@ class _OrderCardState extends State<OrderCard> {
                 color: Colors.orange,
                 background: HorticadeTheme.cardColor!,
               ),
-          trailing: Text('${widget.order.qty.toString()}'
-              ' ordered for R${widget.order.product.cost}'),
+          trailing: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  'Quantity: ${widget.order.qty.toString()}',
+                  style: HorticadeTheme.cardTrailingTextStyle,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Each: ${c(widget.order.product.cost)}',
+                  style: HorticadeTheme.cardTrailingTextStyle,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  'Total: ${c(widget.order.product.cost * widget.order.qty)}',
+                  style: HorticadeTheme.cardTrailingTextStyle,
+                ),
+              ),
+            ],
+          ),
           subtitle: Text(
             createdDate,
             style: HorticadeTheme.cardSubTitleTextStyle,

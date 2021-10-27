@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HorticadeOrderLine extends StatelessWidget {
   final String heading;
-  final String details;
+  final dynamic details;
 
   const HorticadeOrderLine(
       {Key? key, required this.heading, required this.details})
@@ -25,7 +25,7 @@ class HorticadeOrderLine extends StatelessWidget {
           ),
           Expanded(
             flex: 8,
-            child: Text(details),
+            child: details is String ? Text(details) : details,
           ),
         ],
       ),

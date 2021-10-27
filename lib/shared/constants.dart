@@ -28,6 +28,8 @@ String d(DateTime dateTime) {
   return DateFormat('yyyy-MM-dd').format(dateTime);
 }
 
+String c(double val) => NumberFormat('R0.00').format(val);
+
 const formPadding = EdgeInsets.fromLTRB(20.0, 0, 20.0, 0);
 const formImageSpacer = SizedBox(height: 40.0);
 const formTextSpacer = SizedBox(height: 20.0);
@@ -40,7 +42,7 @@ const errorTextStyle = TextStyle(
 
 const awaitTimeout = Duration(seconds: 20);
 
-const cameraResolution = ResolutionPreset.medium;
+const cameraResolution = ResolutionPreset.high;
 
 // All images older than the specified period is removed
-const imageCacheRetentionPeriod = Duration(minutes: 9);
+const imageCacheRetentionPeriod = Duration(days: 3);
