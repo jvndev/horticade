@@ -1,0 +1,299 @@
+import 'dart:io';
+
+import 'package:firebase/models/category.dart';
+import 'package:firebase/models/product.dart';
+import 'package:firebase/models/user.dart';
+import 'package:firebase/screens/camera/camera.dart';
+import 'package:firebase/services/database.dart';
+import 'package:firebase/services/image.dart';
+import 'package:firebase/shared/constants.dart';
+import 'package:firebase/shared/loader.dart';
+import 'package:firebase/theme/horticade_theme.dart';
+import 'package:flutter/material.dart';
+
+class ProductCreate extends StatefulWidget {
+  final AuthUser authUser;
+
+  const ProductCreate({Key? key, required this.authUser}) : super(key: key);
+
+  @override
+  State<ProductCreate> createState() => _ProductCreateState();
+}
+
+class _ProductCreateState extends State<ProductCreate> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ImageService _imageService = ImageService();
+  final DatabaseService db = DatabaseService();
+
+  List<Category> _categories = [];
+
+  bool _loading = false;
+  String _status = '';
+  String? _imagePath;
+  Category? _selectedCategory;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController costController = TextEditingController();
+  final TextEditingController qtyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loading = true;
+    db.categories.then((categories) {
+      setState(() {
+        _categories = categories;
+        _loading = false;
+      });
+    });
+  }
+
+  // Will return null if back is pressed
+  Future<void> _snap() async {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const Camera()))
+        .then((imagePath) {
+      setState(() {
+        _imagePath = imagePath;
+        _status = '';
+      });
+    });
+  }
+
+  Future<void> _createProduct() async {
+    if (_imagePath == null) {
+      setState(() {
+        _status = 'No product picture taken. Tap the image circle above.';
+      });
+
+      return;
+    }
+
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _status = '';
+        _loading = true;
+      });
+
+      String? imageFilename = await _imageService.storeImage(
+        uid: widget.authUser.uid,
+        localPath: _imagePath as String,
+        category: _selectedCategory as Category,
+      );
+
+      Product? product;
+      if (imageFilename == null) {
+        _status = "Failed to save image";
+
+        return;
+      } else {
+        product = await db.createProduct(Product(
+          ownerUid: widget.authUser.uid,
+          name: nameController.text,
+          cost: double.parse(costController.text),
+          category: _selectedCategory as Category,
+          imageFilename: imageFilename,
+          qty: int.parse(qtyController.text),
+        ));
+      }
+
+      setState(() {
+        _loading = false;
+      });
+
+      if (product == null) {
+        _status = 'Unable to create product';
+      } else {
+        bool? again = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Product Created!'),
+            content: const Text('Create another product?'),
+            actions: [
+              IconButton(
+                color: Colors.black,
+                onPressed: () => Navigator.of(context).pop(false),
+                icon: const Icon(Icons.clear),
+              ),
+              IconButton(
+                color: Colors.greenAccent,
+                onPressed: () => Navigator.of(context).pop(true),
+                icon: const Icon(Icons.check),
+              ),
+            ],
+          ),
+        );
+
+        if (again != null && again) {
+          setState(() {
+            nameController.text = '';
+            costController.text = '';
+
+            _imagePath = null;
+          });
+        } else {
+          Navigator.of(context).pop();
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<DropdownMenuItem<Category>> categoryItems = _categories
+        .map((Category e) => DropdownMenuItem<Category>(
+              value: e,
+              child: Text(e.name),
+            ))
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('New Product'),
+        backgroundColor: HorticadeTheme.appbarBackground,
+        iconTheme: HorticadeTheme.appbarIconsTheme,
+        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
+        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
+      ),
+      backgroundColor: HorticadeTheme.scaffoldBackground,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Center(
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: _snap,
+                  child: CircleAvatar(
+                    backgroundColor: HorticadeTheme.scaffoldBackground,
+                    radius: 60.0,
+                    backgroundImage: _imagePath != null
+                        ? Image.file(File(_imagePath as String)).image
+                        : Image.asset(HorticadeTheme.horticateLogo).image,
+                  ),
+                ),
+                formImageSpacer,
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: formPadding,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          validator: (name) => name == null || name.isEmpty
+                              ? 'Product name is required'
+                              : null,
+                          decoration: textFieldDecoration('Product Name'),
+                          controller: nameController,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<Category>(
+                                validator: (category) => category == null
+                                    ? 'Category is required'
+                                    : null,
+                                onChanged: (category) {
+                                  setState(() {
+                                    _selectedCategory = category;
+                                  });
+                                },
+                                hint: const Text("Category"),
+                                items: categoryItems,
+                                value: _selectedCategory,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: TextFormField(
+                                validator: (price) {
+                                  if (price == null || price.isEmpty) {
+                                    return 'Price is required';
+                                  }
+
+                                  if (!RegExp(r'^\d+\.?\d{0,2}$')
+                                      .hasMatch(price) || double.parse(price) <= 0) {
+                                    return 'Invalid price.';
+                                  }
+
+                                  return null;
+                                },
+                                decoration: textFieldDecoration('Price'),
+                                controller: costController,
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 6,
+                              child: TextFormField(
+                                validator: (qty) {
+                                  if (qty == null || qty.isEmpty) {
+                                    return 'Qty is required';
+                                  }
+
+                                  if (!RegExp(r'^\d+$').hasMatch(qty)) {
+                                    return 'Invalid quantity.';
+                                  }
+
+                                  return null;
+                                },
+                                decoration: textFieldDecoration('Qty'),
+                                controller: qtyController,
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ],
+                        ),
+                        formButtonSpacer,
+                        _loading
+                            ? Loader(
+                                color: Colors.orange,
+                                background: HorticadeTheme.scaffoldBackground!,
+                              )
+                            : Row(
+                                children: [
+                                  const Expanded(
+                                    flex: 3,
+                                    child: SizedBox(
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: ElevatedButton(
+                                      onPressed: _createProduct,
+                                      child: const Text(
+                                        'Create',
+                                        style: HorticadeTheme
+                                            .actionButtonTextStyle,
+                                      ),
+                                      style: HorticadeTheme.actionButtonTheme,
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    flex: 3,
+                                    child: SizedBox(
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        Text(_status, style: errorTextStyle),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

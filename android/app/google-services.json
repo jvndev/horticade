@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "457721361107",
+    "project_id": "oceanic-diagram-327517",
+    "storage_bucket": "oceanic-diagram-327517.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457721361107:android:38bc76ab6206e3b7bcda26",
+        "android_client_info": {
+          "package_name": "com.horticade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457721361107-jmhi2jjm318r86bd6f8d9hs2vjh2qn8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO9b0UEpPoPgPAvGtqrhLnJXn6mNovuos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457721361107-jmhi2jjm318r86bd6f8d9hs2vjh2qn8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

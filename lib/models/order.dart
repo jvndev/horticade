@@ -1,0 +1,31 @@
+import 'package:firebase/models/dao.dart';
+import 'package:firebase/models/location.dart';
+import 'package:firebase/models/product.dart';
+
+class Order extends Dao {
+  final String clientUid;
+  final String fulfillerUid; // owner of the product (product.owner)
+  final Product product;
+  final int qty;
+  final bool fulfilled;
+  final Location location;
+  final DateTime created;
+  final DateTime? deliverBy;
+
+  Order({
+    required this.clientUid,
+    required this.fulfillerUid,
+    required this.product,
+    required this.qty,
+    required this.fulfilled,
+    required this.location,
+    required this.created,
+    required this.deliverBy,
+  });
+
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    throw UnimplementedError();
+  }
+}
