@@ -25,7 +25,7 @@ class _CameraState extends State<Camera> {
           );
 
     try {
-      await controller?.initialize();
+      await controller?.initialize().timeout(awaitTimeout);
     } on CameraException {
       return null;
     }

@@ -131,7 +131,8 @@ class _EntityDetailsState extends State<EntityDetails> {
                         Expanded(
                           flex: 9,
                           child: ListTile(
-                            leading: const Icon(Icons.map),
+                            leading:
+                                const Icon(Icons.map, color: Colors.orange),
                             title: const Text('Address'),
                             subtitle: Text(widget.entity.location.address),
                           ),
