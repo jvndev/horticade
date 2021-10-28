@@ -20,7 +20,7 @@ class PendingOrders extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Pending Orders'),
+          title: const Text('Orders Received'),
           backgroundColor: HorticadeTheme.appbarBackground,
           iconTheme: HorticadeTheme.appbarIconsTheme,
           actionsIconTheme: HorticadeTheme.appbarIconsTheme,

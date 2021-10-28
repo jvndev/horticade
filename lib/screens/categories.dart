@@ -121,29 +121,39 @@ class _CategoriesState extends State<Categories> {
                 itemCount: categoryCards.length,
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 8,
-                  child: TextFormField(
-                    decoration: textFieldDecoration('Category Name'),
-                    validator: _categoryValidator,
-                    controller: nameController,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: TextFormField(
+                        decoration: textFieldDecoration('Category Name'),
+                        validator: _categoryValidator,
+                        controller: nameController,
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: _busy
-                      ? Loader(
-                          color: Colors.orange,
-                          background: HorticadeTheme.scaffoldBackground!,
-                        )
-                      : HorticadeButton(
-                          onPressed: _createCategory,
-                          label: 'Save',
-                        ),
-                ),
-              ],
+                  Expanded(
+                    flex: 4,
+                    child: _busy
+                        ? Loader(
+                            color: Colors.orange,
+                            background: HorticadeTheme.scaffoldBackground!,
+                          )
+                        : ElevatedButton(
+                            onPressed: _createCategory,
+                            style: HorticadeTheme.actionButtonTheme,
+                            child: const Text(
+                              'Save',
+                              style: HorticadeTheme.actionButtonTextStyle,
+                            ),
+                          ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

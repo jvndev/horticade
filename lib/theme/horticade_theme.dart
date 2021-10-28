@@ -24,8 +24,8 @@ class HorticadeTheme {
   static const cardSubTitleTextStyle = TextStyle(color: Colors.orangeAccent);
   static const cardTrailingTextStyle = TextStyle(color: Colors.orange);
   static final checkBoxActive = Colors.grey[700];
-  static const datePickerPrimary = Color(0xFF616161);
 
+  static const datePickerPrimary = Color(0xFF616161);
   static MaterialColor calenderColorSwatch = const MaterialColor(
     0xFF616161,
     <int, Color>{
@@ -40,5 +40,17 @@ class HorticadeTheme {
       800: Color(0xFF616161),
       900: Color(0xFF616161),
     },
+  );
+
+  static final dropdownMenuColor = Colors.grey[700];
+  static const dropdownMenuIconColor = Colors.orange;
+  static const dropdownMenuTextStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  );
+  static final dropdownMenuItemStyle = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(Colors.grey[700]),
+    elevation: MaterialStateProperty.all(0),
+    side: MaterialStateProperty.all(BorderSide.none),
   );
 }
