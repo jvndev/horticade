@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class LocationSearch extends StatefulWidget {
-  final dynamic onSelected;
+  final Function onSelected;
 
   const LocationSearch({Key? key, required this.onSelected}) : super(key: key);
 

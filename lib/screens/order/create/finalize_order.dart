@@ -3,7 +3,8 @@ import 'package:firebase/models/location.dart';
 import 'package:firebase/models/order.dart';
 import 'package:firebase/models/product.dart';
 import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/location/location_search.dart';
+import 'package:firebase/screens/order/create/delivery_address_dialog.dart';
+import 'package:firebase/screens/order/create/delivery_date_row.dart';
 import 'package:firebase/services/database.dart';
 import 'package:firebase/services/image.dart';
 import 'package:firebase/services/location.dart';
@@ -36,9 +37,10 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
   String _qty = '';
   bool _useDefaultAddress = true;
   Entity? productOwner;
-  Location? deliveryLocation;
+  Location? newDeliveryLocation;
   DateTime? deliveryDate;
   String? _distance;
+  String? deliverTo;
   bool _busy = false;
 
   @override
@@ -59,6 +61,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
     databaseService.findEntity(widget.authUser.uid).then((entity) {
       setState(() {
         _entity = entity;
+        deliverTo = _entity!.location.address;
       });
       databaseService.findEntity(widget.product.ownerUid).then((owner) {
         setState(() {
@@ -88,43 +91,23 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
     });
   }
 
-  void _toggleDefaultAddress(bool? state) async {
+  void _toggleDefaultAddress(bool? useDefault) async {
+    Location productLocation = productOwner!.location;
+
     setState(() {
-      _useDefaultAddress = state ?? true;
+      _useDefaultAddress = useDefault ?? true;
     });
 
-    if (state != null && !state) {
+    if (useDefault != null && !useDefault) {
       bool? ret = await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Delivery Address'),
-          content: Column(
-            children: [
-              LocationSearch(onSelected: (location) {
-                setState(() {
-                  deliveryLocation = location;
-                });
-              }),
-            ],
-          ),
-          actions: [
-            IconButton(
-              color: Colors.greenAccent,
-              iconSize: 70.00,
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              icon: const Icon(Icons.check),
-            ),
-            IconButton(
-              color: Colors.black,
-              iconSize: 70.00,
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              icon: const Icon(Icons.clear),
-            ),
-          ],
+        builder: (context) => DeliveryAddressDialog(
+          context: context,
+          onLocationSelected: (location) {
+            setState(() {
+              newDeliveryLocation = location;
+            });
+          },
         ),
       );
 
@@ -133,10 +116,16 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
           _useDefaultAddress = true;
         });
       } else {
-        calculateDistance(productOwner!.location, deliveryLocation!);
+        calculateDistance(productLocation, newDeliveryLocation!);
+        setState(() {
+          deliverTo = newDeliveryLocation!.address;
+        });
       }
     } else {
-      calculateDistance(productOwner!.location, _entity!.location);
+      calculateDistance(productLocation, _entity!.location);
+      setState(() {
+        deliverTo = _entity!.location.address;
+      });
     }
   }
 
@@ -167,7 +156,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
   Future<void> _placeOrder() async {
     if (_dailogFormKey.currentState!.validate()) {
       Location location =
-          _useDefaultAddress ? _entity!.location : deliveryLocation!;
+          _useDefaultAddress ? _entity!.location : newDeliveryLocation!;
 
       Order order = Order(
         clientUid: widget.authUser.uid,
@@ -213,6 +202,22 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
 
   @override
   Widget build(BuildContext context) {
+    String? orderValidator(val) {
+      if (val == null || val.isEmpty) {
+        return 'Qty Required';
+      } else if (!RegExp(r'^\d+$').hasMatch(val)) {
+        return 'Invalid Qty';
+      } else if (int.parse(val) <= 0) {
+        return 'Cannot be 0';
+      } else if (widget.product.qty <= 0) {
+        return 'Item is out of stock';
+      } else if (int.parse(val) > widget.product.qty) {
+        return 'Qty is more than in stock';
+      }
+
+      return null;
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -269,21 +274,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
                       decoration: const InputDecoration(
                         label: Text('Order Quantity'),
                       ),
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return 'Qty Required';
-                        } else if (!RegExp(r'^\d+$').hasMatch(val)) {
-                          return 'Invalid Qty';
-                        } else if (int.parse(val) <= 0) {
-                          return 'Cannot be 0';
-                        } else if (widget.product.qty <= 0) {
-                          return 'Item is out of stock';
-                        } else if (int.parse(val) > widget.product.qty) {
-                          return 'Qty is more than in stock';
-                        }
-
-                        return null;
-                      },
+                      validator: orderValidator,
                       onChanged: (val) => _qty = val,
                     ),
                     formTextSpacer,
@@ -328,9 +319,15 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
                                 children: [
                                   const Text('Deliver to',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  Text(
-                                      '${_useDefaultAddress ? _entity?.location.address : deliveryLocation?.address}'),
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  deliverTo == null
+                                      ? Loader(
+                                          color: Colors.orange,
+                                          background: HorticadeTheme
+                                              .scaffoldBackground!,
+                                        )
+                                      : Text(deliverTo!),
                                 ],
                               ),
                             ),
@@ -402,54 +399,5 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
         ),
       ),
     );
-  }
-}
-
-class DeliveryDateRow extends StatelessWidget {
-  final dynamic set;
-  final dynamic unset;
-  final DateTime? deliveryDate;
-
-  const DeliveryDateRow(
-      {Key? key, required this.deliveryDate, this.set, this.unset})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (deliveryDate == null) {
-      return Row(
-        children: [
-          ElevatedButton(
-            onPressed: set,
-            child: const Text(
-              'Set',
-              style: HorticadeTheme.actionButtonTextStyle,
-            ),
-            style: HorticadeTheme.actionButtonTheme,
-          ),
-          const SizedBox(
-            width: 10.0,
-          ),
-          const Text('Delivery Date'),
-        ],
-      );
-    } else {
-      return Row(
-        children: [
-          ElevatedButton(
-            onPressed: unset,
-            child: const Text(
-              'Unset',
-              style: HorticadeTheme.actionButtonTextStyle,
-            ),
-            style: HorticadeTheme.actionButtonTheme,
-          ),
-          const SizedBox(
-            width: 10.0,
-          ),
-          Text('Req. delivery date: ${d(deliveryDate!)}'),
-        ],
-      );
-    }
   }
 }

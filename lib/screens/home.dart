@@ -9,7 +9,6 @@ import 'package:firebase/screens/product/product_create.dart';
 import 'package:firebase/screens/product/inventory.dart';
 import 'package:firebase/screens/product/products_watch.dart';
 import 'package:firebase/services/auth.dart';
-import 'package:firebase/services/image.dart';
 import 'package:firebase/shared/constants.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
