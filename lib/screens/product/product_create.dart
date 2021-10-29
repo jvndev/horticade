@@ -129,6 +129,7 @@ class _ProductCreateState extends State<ProductCreate> {
           setState(() {
             nameController.text = '';
             costController.text = '';
+            qtyController.text = '';
 
             _imagePath = null;
           });

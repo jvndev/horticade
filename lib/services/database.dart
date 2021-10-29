@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/db/order_dao.dart';
+import 'package:firebase/db/product_dao.dart';
 import 'package:firebase/models/category.dart';
-import 'package:firebase/models/dao.dart';
 import 'package:firebase/models/entity.dart';
 import 'package:firebase/models/location.dart';
 import 'package:firebase/models/order.dart';
 import 'package:firebase/models/product.dart';
-import 'package:firebase/models/user.dart';
 import 'package:firebase/shared/constants.dart';
+import 'package:firebase/shared/types.dart';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -80,10 +81,10 @@ class DatabaseService {
     }
   }
 
-  /**
-   * Images are stored under Firebase Storage as:
-   * <category>/image_filename.jpg
-   */
+  ///
+  /// Images are stored under Firebase Storage as:
+  /// <category>/image_filename.jpg
+  ///
   Future<Product?> createProduct(Product product) async {
     try {
       DocumentReference categoryRef =
@@ -188,7 +189,8 @@ class DatabaseService {
       orders.add(Order(
         clientUid: data['client_uid'],
         fulfillerUid: data['fulfiller_uid'],
-        product: await Dao.productFromDocumentSnapshot(await productRef.get()),
+        product: await ProductDao.productFromDocumentSnapshot(
+            await productRef.get()),
         qty: data['qty'],
         fulfilled: data['fulfilled'],
         location: Location(
@@ -236,25 +238,19 @@ class DatabaseService {
 
   // Streams //
 
-  List<Future<Product>> _snapshotToProduct(
-      QuerySnapshot<Map<String, dynamic>> snapshot) {
-    return snapshot.docs.map(Dao.productFromDocumentSnapshot).toList();
-  }
+  Stream<Future<List<Product>>> productStream({ProductPredicate? filter}) =>
+      _firestore.collection('products').snapshots().map(
+            (snapshot) => ProductDao.productsFromQuerySnapshot(
+              snapshot: snapshot,
+              filter: filter,
+            ),
+          );
 
-  List<Future<Order>> _snapshotToOrder(
-      QuerySnapshot<Map<String, dynamic>> snapshot, AuthUser authUser) {
-    return snapshot.docs
-        .where((doc) => doc.data()['fulfiller_uid'] == authUser.uid)
-        .map(Dao.orderFromDocumentSnapshot)
-        .toList();
-  }
-
-  Stream<List<Future<Product>>> get productStream =>
-      _firestore.collection('products').snapshots().map(_snapshotToProduct);
-
-  Stream<List<Future<Order>>> pendingOrderStream(AuthUser authUser) =>
-      _firestore
-          .collection('orders')
-          .snapshots()
-          .map((snapshot) => _snapshotToOrder(snapshot, authUser));
+  Stream<Future<List<Order>>> pendingOrderStream({OrderPredicate? filter}) =>
+      _firestore.collection('orders').snapshots().map(
+            (snapshot) => OrderDao.ordersFromQuerySnapshot(
+              snapshot: snapshot,
+              filter: filter,
+            ),
+          );
 }

@@ -1,6 +1,8 @@
 import 'package:firebase/models/order.dart';
-import 'package:firebase/screens/order/display/order_card_future.dart';
-import 'package:firebase/screens/order/display/order_details_future.dart';
+import 'package:firebase/screens/order/display/order_card.dart';
+import 'package:firebase/screens/order/display/order_details.dart';
+import 'package:firebase/shared/loader.dart';
+import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,25 +11,48 @@ class PendingOrdersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Future<Order>> orders = Provider.of<List<Future<Order>>>(context);
-
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            key: Key('orderlist${orders.length}'),
-            itemCount: orders.length,
-            itemBuilder: (context, i) => OrderCardFuture(
-              order: orders[i],
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        OrderDetailsFuture(order: orders[i])));
-              },
-            ),
-          ),
-        )
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Orders Received'),
+        backgroundColor: HorticadeTheme.appbarBackground,
+        iconTheme: HorticadeTheme.appbarIconsTheme,
+        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
+        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
+      ),
+      backgroundColor: HorticadeTheme.scaffoldBackground,
+      body: FutureBuilder<List<Order>>(
+          initialData: const <Order>[],
+          future: Provider.of<Future<List<Order>>>(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Order> orders = snapshot.data!;
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      key: Key('orderlist${orders.length}'),
+                      itemCount: orders.length,
+                      itemBuilder: (context, i) => OrderCard(
+                        order: orders[i],
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                OrderDetails(order: orders[i]),
+                          ));
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              );
+            } else {
+              return Loader(
+                color: Colors.orange,
+                background: HorticadeTheme.scaffoldBackground!,
+              );
+            }
+          }),
     );
   }
 }

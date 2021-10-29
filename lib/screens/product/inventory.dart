@@ -137,7 +137,10 @@ class _InventoryState extends State<Inventory> {
                           padding: const EdgeInsets.only(bottom: 20.0),
                           child: Column(
                             children: [
-                              ProductCard(product: product),
+                              ProductCard(
+                                product: product,
+                                onTap: () {},
+                              ),
                               Container(
                                 margin:
                                     const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),

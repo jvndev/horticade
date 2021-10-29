@@ -1,11 +1,10 @@
 ///
 /// Used in finalize_order.dart
 ///
+import 'package:firebase/shared/types.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase/shared/constants.dart';
-
-typedef VoidFunc = void Function();
 
 class DeliveryDateRow extends StatelessWidget {
   final VoidFunc set;

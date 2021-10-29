@@ -2,14 +2,16 @@ import 'package:firebase/models/product.dart';
 import 'package:firebase/services/image.dart';
 import 'package:firebase/shared/constants.dart';
 import 'package:firebase/shared/image_loader.dart';
+import 'package:firebase/shared/types.dart';
 import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
-  dynamic onTap;
+  final VoidFunc onTap;
 
-  ProductCard({Key? key, required this.product, this.onTap}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required this.onTap})
+      : super(key: key);
 
   @override
   State<ProductCard> createState() => _ProductCardState();

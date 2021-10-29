@@ -6,17 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductsWatch extends StatelessWidget {
-  final DatabaseService db = DatabaseService();
+  final DatabaseService databaseService = DatabaseService();
   final AuthUser authUser;
 
   ProductsWatch({Key? key, required this.authUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Future<Product>>>.value(
-      initialData: const [],
-      value: db.productStream,
-      child: const ProductsWatchList(),
+    return StreamProvider<Future<List<Product>>>(
+      initialData: Future(() => const <Product>[]),
+      create: (context) => databaseService.productStream(),
+      //child: ProductsWatchList(authUser: authUser),
+      builder: (context, widget) => ProductsWatchList(authUser: authUser),
     );
   }
 }
