@@ -236,13 +236,15 @@ class DatabaseService {
     }
   }
 
+
   // Streams //
 
-  Stream<Future<List<Product>>> productStream({ProductPredicate? filter}) =>
+  Stream<Future<List<Product>>> productStream(
+          {List<ProductPredicate>? filters}) =>
       _firestore.collection('products').snapshots().map(
             (snapshot) => ProductDao.productsFromQuerySnapshot(
               snapshot: snapshot,
-              filter: filter,
+              filters: filters,
             ),
           );
 

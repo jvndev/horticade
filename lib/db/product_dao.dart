@@ -6,16 +6,19 @@ import 'package:firebase/shared/types.dart';
 class ProductDao {
   static Future<List<Product>> productsFromQuerySnapshot({
     required QuerySnapshot<Map<String, dynamic>> snapshot,
-    ProductPredicate? filter,
+    List<ProductPredicate>? filters,
   }) async {
     List<Product> products = [];
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> qds in snapshot.docs) {
-      products.add(await ProductDao.productFromQueryDocumentSnapshot(qds));
+      products.add(
+          await ProductDao.productFromQueryDocumentSnapshot(snapshot: qds));
     }
 
-    if (filter != null) {
-      products = products.where(filter).toList();
+    if (filters != null) {
+      for (ProductPredicate filter in filters) {
+        products = products.where(filter).toList();
+      }
     }
 
     return products;
@@ -27,20 +30,20 @@ class ProductDao {
 
     data['uid'] = snapshot.id;
 
-    return _productFromDocumentData(data);
+    return _productFromDocumentData(data: data);
   }
 
   static Future<Product> productFromQueryDocumentSnapshot(
-      QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
+      {required QueryDocumentSnapshot<Map<String, dynamic>> snapshot}) async {
     Map<String, dynamic> data = snapshot.data();
 
     data['uid'] = snapshot.id;
 
-    return _productFromDocumentData(data);
+    return _productFromDocumentData(data: data);
   }
 
   static Future<Product> _productFromDocumentData(
-      Map<String, dynamic> data) async {
+      {required Map<String, dynamic> data}) async {
     DocumentReference<Map<String, dynamic>> categoryRef = data['category'];
     DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
         await categoryRef.get();
