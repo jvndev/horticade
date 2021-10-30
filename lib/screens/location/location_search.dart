@@ -2,6 +2,7 @@ import 'package:firebase/models/location.dart';
 import 'package:firebase/services/location.dart';
 import 'package:firebase/shared/constants.dart';
 import 'package:firebase/shared/loader.dart';
+import 'package:firebase/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -22,13 +23,18 @@ class _LocationSearchState extends State<LocationSearch> {
   @override
   Widget build(BuildContext context) {
     return TypeAheadFormField<Location>(
-      loadingBuilder: (context) => const Loader(
+      loadingBuilder: (context) => Loader(
         color: Colors.orange,
-        background: Colors.white,
+        background: HorticadeTheme.lookAheadTileColor!,
       ),
       suggestionsCallback: locationService.search,
-      itemBuilder: (context, location) =>
-          ListTile(title: Text(location.address)),
+      itemBuilder: (context, location) => ListTile(
+        tileColor: HorticadeTheme.lookAheadTileColor,
+        title: Text(
+          location.address,
+          style: HorticadeTheme.lookAheadDropdownTextStyle,
+        ),
+      ),
       onSuggestionSelected: (location) {
         widget.onSelected(location);
 

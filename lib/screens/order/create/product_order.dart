@@ -21,7 +21,6 @@ class ProductOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Filter filter = Provider.of<Filter>(context);
-    print(filter.getFilters);
 
     return StreamProvider<Future<List<Product>>>.value(
       value: databaseService.productStream(filters: filter.getFilters),

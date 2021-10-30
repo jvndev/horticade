@@ -53,4 +53,9 @@ class HorticadeTheme {
     elevation: MaterialStateProperty.all(0),
     side: MaterialStateProperty.all(BorderSide.none),
   );
+  static const lookAheadDropdownTextStyle = TextStyle(
+    color: Colors.orange,
+    fontSize: 14,
+  );
+  static final lookAheadTileColor = Colors.grey[700];
 }

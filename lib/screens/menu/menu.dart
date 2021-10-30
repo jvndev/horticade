@@ -3,7 +3,6 @@ import 'package:firebase/models/user.dart';
 import 'package:firebase/screens/categories.dart';
 import 'package:firebase/screens/entity_details.dart';
 import 'package:firebase/screens/menu/menu_item.dart';
-import 'package:firebase/screens/order/create/product_order.dart';
 import 'package:firebase/screens/order/create/product_order_entry.dart';
 import 'package:firebase/screens/order/display/pending_orders.dart';
 import 'package:firebase/screens/order/display/sent_orders.dart';

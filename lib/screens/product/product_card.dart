@@ -30,9 +30,13 @@ class _ProductCardState extends State<ProductCard> {
             category: widget.product.category.name,
             imageFilename: widget.product.imageFilename)
         .then((image) {
-      setState(() {
-        _image = image;
-      });
+      // TODO checking if mounted might be a temporary fix
+      // Unhandled Exception: setState() called after dispose()
+      if (mounted) {
+        setState(() {
+          _image = image;
+        });
+      }
     });
   }
 

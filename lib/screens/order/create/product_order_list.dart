@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase/screens/product/product_card.dart';
 import 'package:firebase/shared/constants.dart';
 import 'package:firebase/shared/loader.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 
 class ProductOrderList extends StatefulWidget {
@@ -27,9 +28,10 @@ class ProductOrderList extends StatefulWidget {
 }
 
 class _ProductOrderListState extends State<ProductOrderList> {
-  List<DropdownMenuItem<Category>>? _categoryItems;
   final DatabaseService databaseService = DatabaseService();
-  GlobalKey<FormState> priceFormKey = GlobalKey<FormState>();
+  final TextEditingController productNameController = TextEditingController();
+  final GlobalKey<FormState> priceFormKey = GlobalKey<FormState>();
+  List<DropdownMenuItem<Category>>? _categoryItems;
   String fromPrice = '', toPrice = '';
 
   Future<Order?> _confirmOrder(Product product) async =>
@@ -76,6 +78,19 @@ class _ProductOrderListState extends State<ProductOrderList> {
     }
   }
 
+  Future<List<String>> lookAheadProductNames(String search) async {
+    List<Product> products =
+        await Provider.of<Future<List<Product>>>(context, listen: false);
+    List<String> productNames =
+        products.map((product) => product.name).toList();
+
+    return search.isEmpty
+        ? productNames
+        : productNames
+            .where((name) => name.toLowerCase().contains(search.toLowerCase()))
+            .toList();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -90,6 +105,10 @@ class _ProductOrderListState extends State<ProductOrderList> {
             .toList();
       });
     });
+
+    productNameController.addListener(() {
+      widget.filter.name = productNameController.text;
+    });
   }
 
   @override
@@ -98,71 +117,114 @@ class _ProductOrderListState extends State<ProductOrderList> {
       initialData: const [],
       future: Provider.of<Future<List<Product>>>(context),
       builder: (context, snapshot) {
-        List<Product> products = snapshot.hasData ? snapshot.data! : [];
+        List<Product>? products =
+            snapshot.hasData && snapshot.data != null ? snapshot.data : null;
 
         return Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _categoryItems == null
-                      ? Loader(
-                          color: Colors.orange,
-                          background: HorticadeTheme.scaffoldBackground!,
-                        )
-                      : DropdownButtonFormField<Category>(
-                          decoration: const InputDecoration(
-                            label: Text('Category'),
-                          ),
-                          hint: const Text('Filter by Category'),
-                          value: null,
-                          items: _categoryItems,
-                          isExpanded: false,
-                          onChanged: (category) =>
-                              widget.filter.category = category,
-                        ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    onChanged: (name) => widget.filter.name = name,
-                    decoration: textFieldDecoration('Filter by Product Name'),
-                  ),
-                ),
-              ],
+            Expanded(
+              flex: 1,
+              child: _categoryItems == null
+                  ? Loader(
+                      color: Colors.orange,
+                      background: HorticadeTheme.scaffoldBackground!,
+                    )
+                  : DropdownButtonFormField<Category>(
+                      decoration: const InputDecoration(
+                        label: Text('Category'),
+                      ),
+                      hint: const Text('Filter by Category'),
+                      value: null,
+                      items: _categoryItems,
+                      isExpanded: false,
+                      onChanged: (category) =>
+                          widget.filter.category = category,
+                    ),
             ),
-            Form(
-              key: priceFormKey,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: textFieldDecoration('Price From'),
-                      onChanged: (val) =>
-                          fromPriceFilterChanged(val, widget.filter),
-                      validator: priceValidator,
-                    ),
+            Expanded(
+              flex: 1,
+              child: TypeAheadField<String>(
+                loadingBuilder: (context) => Loader(
+                  color: Colors.orange,
+                  background: HorticadeTheme.lookAheadTileColor!,
+                ),
+                suggestionsCallback: lookAheadProductNames,
+                itemBuilder: (context, productName) => ListTile(
+                  tileColor: HorticadeTheme.lookAheadTileColor,
+                  title: Text(
+                    productName,
+                    style: HorticadeTheme.lookAheadDropdownTextStyle,
                   ),
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: textFieldDecoration('Price To'),
-                      onChanged: (val) =>
-                          toPriceFilterChanged(val, widget.filter),
-                      validator: priceValidator,
-                    ),
+                ),
+                onSuggestionSelected: (String name) {
+                  widget.filter.name = name;
+                  productNameController.text = name;
+                },
+                textFieldConfiguration: TextFieldConfiguration(
+                  decoration: textFieldDecoration('Filter by Product Name'),
+                  controller: productNameController,
+                ),
+                noItemsFoundBuilder: (context) => const Text(
+                  'No Matching Items',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                ],
+                ),
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: products.length,
-                itemBuilder: (context, i) => ProductCard(
-                  product: products[i],
-                  onTap: () => _confirmOrder(products[i]),
+              flex: 1,
+              child: Form(
+                key: priceFormKey,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        decoration: textFieldDecoration('Price From'),
+                        onChanged: (val) =>
+                            fromPriceFilterChanged(val, widget.filter),
+                        validator: priceValidator,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        decoration: textFieldDecoration('Price To'),
+                        onChanged: (val) =>
+                            toPriceFilterChanged(val, widget.filter),
+                        validator: priceValidator,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+            formTextSpacer,
+            Expanded(
+              flex: 9,
+              child: products == null
+                  ? Loader(
+                      color: Colors.orange,
+                      background: HorticadeTheme.scaffoldBackground!,
+                    )
+                  : (products.isEmpty
+                      ? const Text(
+                          'No Products Found',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        )
+                      : ListView.builder(
+                          key: Key('product_order_list${products.length}'),
+                          itemCount: products.length,
+                          itemBuilder: (context, i) => ProductCard(
+                            product: products[i],
+                            onTap: () => _confirmOrder(products[i]),
+                          ),
+                        )),
             ),
           ],
         );
