@@ -109,24 +109,6 @@ class DatabaseService {
     }
   }
 
-  Future<List<Product>> findProductsByOwner(String uid) async {
-    List<Product> ret = [];
-    List<Category> _categories = await categories;
-
-    for (Category category in _categories) {
-      List<Product> _products =
-          await _findProducts(category, (QueryDocumentSnapshot qds) {
-        Map data = qds.data() as Map<String, dynamic>;
-
-        return data['owner_uid'] == uid;
-      });
-
-      ret.addAll(_products);
-    }
-
-    return ret;
-  }
-
   Future<List<Product>> findProductsByNameExcludeOwned(
           Category category, String name, String ownerUid) =>
       _findProducts(

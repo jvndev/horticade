@@ -6,7 +6,7 @@ import 'package:horticade/screens/menu/menu_item.dart';
 import 'package:horticade/screens/order/create/product_order_entry.dart';
 import 'package:horticade/screens/order/display/pending_orders.dart';
 import 'package:horticade/screens/order/display/sent_orders.dart';
-import 'package:horticade/screens/product/inventory.dart';
+import 'package:horticade/screens/inventory/inventory_entry.dart';
 import 'package:horticade/screens/product/product_create.dart';
 import 'package:horticade/services/auth.dart';
 import 'package:horticade/theme/horticade_theme.dart';
@@ -95,7 +95,7 @@ class Menu extends PopupMenuButton {
                 break;
               case 'inventory':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Inventory(authUser: authUser),
+                  builder: (context) => const InventoryEntry(),
                 ));
                 break;
               case 'categories':

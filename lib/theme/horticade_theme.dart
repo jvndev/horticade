@@ -58,4 +58,11 @@ class HorticadeTheme {
     fontSize: 14,
   );
   static final lookAheadTileColor = Colors.grey[700];
+  static final bottomSheetDecoration = BoxDecoration(color: Colors.grey[700]);
+  static const bottomSheetIconColor = Colors.orange;
+  static const bottomSheetTextStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 16.0,
+  );
 }
