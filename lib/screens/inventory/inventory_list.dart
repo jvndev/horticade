@@ -3,6 +3,7 @@ import 'package:horticade/models/product.dart';
 import 'package:horticade/screens/inventory/inventory_bottom_sheet.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class InventoryList extends StatelessWidget {
     return FutureBuilder<List<Product>>(
       future: Provider.of<Future<List<Product>>>(context),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
+        if (snapshot.hasData) {
           List<Product> products = snapshot.data!;
 
           return ListView.builder(

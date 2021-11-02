@@ -117,8 +117,13 @@ class _ProductOrderListState extends State<ProductOrderList> {
       initialData: const [],
       future: Provider.of<Future<List<Product>>>(context),
       builder: (context, snapshot) {
-        List<Product>? products =
-            snapshot.hasData && snapshot.data != null ? snapshot.data : null;
+        List<Product>? products;
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !snapshot.hasData) {
+          products = null;
+        } else {
+          products = snapshot.data!;
+        }
 
         return Column(
           children: [
@@ -203,7 +208,7 @@ class _ProductOrderListState extends State<ProductOrderList> {
             ),
             formTextSpacer,
             Expanded(
-              flex: 9,
+              flex: 6,
               child: products == null
                   ? Loader(
                       color: Colors.orange,
@@ -221,8 +226,8 @@ class _ProductOrderListState extends State<ProductOrderList> {
                           key: Key('product_order_list${products.length}'),
                           itemCount: products.length,
                           itemBuilder: (context, i) => ProductCard(
-                            product: products[i],
-                            onTap: () => _confirmOrder(products[i]),
+                            product: products![i],
+                            onTap: () => _confirmOrder(products![i]),
                           ),
                         )),
             ),

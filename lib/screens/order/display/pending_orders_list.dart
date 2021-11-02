@@ -25,7 +25,14 @@ class PendingOrdersList extends StatelessWidget {
           initialData: const <Order>[],
           future: Provider.of<Future<List<Order>>>(context),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                !snapshot.hasData) {
+              return Loader(
+                color: Colors.orange,
+                background: HorticadeTheme.scaffoldBackground!,
+              );
+            }
+            {
               List<Order> orders = snapshot.data!;
               return Column(
                 children: [
@@ -45,11 +52,6 @@ class PendingOrdersList extends StatelessWidget {
                     ),
                   )
                 ],
-              );
-            } else {
-              return Loader(
-                color: Colors.orange,
-                background: HorticadeTheme.scaffoldBackground!,
               );
             }
           }),

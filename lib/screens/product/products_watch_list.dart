@@ -18,7 +18,13 @@ class ProductsWatchList extends StatelessWidget {
       initialData: const <Product>[],
       future: Provider.of<Future<List<Product>>>(context),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !snapshot.hasData) {
+          return Loader(
+            color: Colors.orange,
+            background: HorticadeTheme.scaffoldBackground!,
+          );
+        } else {
           List<Product> products = snapshot.data!;
 
           return Expanded(
@@ -39,11 +45,6 @@ class ProductsWatchList extends StatelessWidget {
                 },
               ),
             ),
-          );
-        } else {
-          return Loader(
-            color: Colors.orange,
-            background: HorticadeTheme.scaffoldBackground!,
           );
         }
       },
