@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:firebase/shared/image_display.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/shared/image_display.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class ShowPicture extends StatelessWidget {

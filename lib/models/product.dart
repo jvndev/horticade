@@ -1,5 +1,5 @@
-import 'package:firebase/models/category.dart';
-import 'package:firebase/models/dao.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/models/dao.dart';
 
 class Product extends Dao implements Comparable<Product> {
   final String ownerUid;

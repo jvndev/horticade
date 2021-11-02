@@ -1,8 +1,8 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/location.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/shared/constants.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {

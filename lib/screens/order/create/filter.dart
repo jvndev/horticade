@@ -1,7 +1,7 @@
-import 'package:firebase/models/category.dart';
-import 'package:firebase/models/product.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/shared/types.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/shared/types.dart';
 import 'package:flutter/cupertino.dart';
 
 class Filter with ChangeNotifier {

@@ -1,19 +1,19 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/location.dart';
-import 'package:firebase/models/order.dart';
-import 'package:firebase/models/product.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/order/create/delivery_address_dialog.dart';
-import 'package:firebase/screens/order/create/delivery_date_row.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/services/image.dart';
-import 'package:firebase/services/location.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/image_display.dart';
-import 'package:firebase/shared/image_loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/order/create/delivery_address_dialog.dart';
+import 'package:horticade/screens/order/create/delivery_date_row.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/services/image.dart';
+import 'package:horticade/services/location.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/image_display.dart';
+import 'package:horticade/shared/image_loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase/shared/loader.dart';
+import 'package:horticade/shared/loader.dart';
 
 class FinalizeOrder extends StatefulWidget {
   final Product product;

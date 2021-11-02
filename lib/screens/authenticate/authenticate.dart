@@ -1,5 +1,5 @@
-import 'package:firebase/screens/authenticate/login.dart';
-import 'package:firebase/screens/authenticate/register.dart';
+import 'package:horticade/screens/authenticate/login.dart';
+import 'package:horticade/screens/authenticate/register.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {

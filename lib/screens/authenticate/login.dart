@@ -1,7 +1,7 @@
-import 'package:firebase/services/auth.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/services/auth.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {

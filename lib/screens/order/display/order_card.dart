@@ -1,9 +1,9 @@
-import 'package:firebase/models/order.dart';
-import 'package:firebase/services/image.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/image_loader.dart';
-import 'package:firebase/shared/types.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/services/image.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/image_loader.dart';
+import 'package:horticade/shared/types.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class OrderCard extends StatefulWidget {

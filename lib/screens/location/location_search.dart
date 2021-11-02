@@ -1,8 +1,8 @@
-import 'package:firebase/models/location.dart';
-import 'package:firebase/services/location.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/services/location.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 

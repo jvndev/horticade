@@ -1,5 +1,5 @@
-import 'package:firebase/models/dao.dart';
-import 'package:firebase/models/location.dart';
+import 'package:horticade/models/dao.dart';
+import 'package:horticade/models/location.dart';
 
 class Entity extends Dao {
   final String name;

@@ -1,7 +1,7 @@
-import 'package:firebase/models/order.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/order/display/pending_orders_list.dart';
-import 'package:firebase/services/database.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/order/display/pending_orders_list.dart';
+import 'package:horticade/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

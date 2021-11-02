@@ -1,7 +1,7 @@
 ///
 /// Used in finalize_order.dart
 ///
-import 'package:firebase/screens/location/location_search.dart';
+import 'package:horticade/screens/location/location_search.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryAddressDialog extends AlertDialog {

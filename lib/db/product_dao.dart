@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/db/category_dao.dart';
-import 'package:firebase/models/product.dart';
-import 'package:firebase/shared/types.dart';
+import 'package:horticade/db/category_dao.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/shared/types.dart';
 
 class ProductDao {
   static Future<List<Product>> productsFromQuerySnapshot({

@@ -1,7 +1,7 @@
-import 'package:firebase/models/product.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/product/products_watch_list.dart';
-import 'package:firebase/services/database.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/product/products_watch_list.dart';
+import 'package:horticade/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

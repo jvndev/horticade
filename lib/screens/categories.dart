@@ -1,8 +1,8 @@
-import 'package:firebase/models/category.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatefulWidget {

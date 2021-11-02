@@ -1,8 +1,8 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/screens/location/location_search.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/screens/location/location_search.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class EntityDetails extends StatefulWidget {

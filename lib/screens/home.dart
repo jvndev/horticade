@@ -1,9 +1,9 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/menu/menu.dart';
-import 'package:firebase/screens/product/products_watch.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/menu/menu.dart';
+import 'package:horticade/screens/product/products_watch.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

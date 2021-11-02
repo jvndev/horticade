@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/db/order_dao.dart';
-import 'package:firebase/db/product_dao.dart';
-import 'package:firebase/models/category.dart';
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/location.dart';
-import 'package:firebase/models/order.dart';
-import 'package:firebase/models/product.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/types.dart';
+import 'package:horticade/db/order_dao.dart';
+import 'package:horticade/db/product_dao.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/types.dart';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -235,7 +235,6 @@ class DatabaseService {
       return null;
     }
   }
-
 
   // Streams //
 

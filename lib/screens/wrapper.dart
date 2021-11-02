@@ -1,11 +1,11 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/location.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/authenticate/authenticate.dart';
-import 'package:firebase/screens/home.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/authenticate/authenticate.dart';
+import 'package:horticade/screens/home.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

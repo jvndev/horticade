@@ -1,6 +1,6 @@
-import 'package:firebase/screens/wrapper.dart';
-import 'package:firebase/services/auth.dart';
-import 'package:firebase/services/image.dart';
+import 'package:horticade/screens/wrapper.dart';
+import 'package:horticade/services/auth.dart';
+import 'package:horticade/services/image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';

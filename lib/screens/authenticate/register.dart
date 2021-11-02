@@ -1,10 +1,10 @@
-import 'package:firebase/models/location.dart';
-import 'package:firebase/screens/location/location_search.dart';
-import 'package:firebase/services/auth.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/screens/location/location_search.dart';
+import 'package:horticade/services/auth.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase/shared/constants.dart';
+import 'package:horticade/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;

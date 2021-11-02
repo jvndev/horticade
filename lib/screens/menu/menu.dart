@@ -1,15 +1,15 @@
-import 'package:firebase/models/entity.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/categories.dart';
-import 'package:firebase/screens/entity_details.dart';
-import 'package:firebase/screens/menu/menu_item.dart';
-import 'package:firebase/screens/order/create/product_order_entry.dart';
-import 'package:firebase/screens/order/display/pending_orders.dart';
-import 'package:firebase/screens/order/display/sent_orders.dart';
-import 'package:firebase/screens/product/inventory.dart';
-import 'package:firebase/screens/product/product_create.dart';
-import 'package:firebase/services/auth.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/entity.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/categories.dart';
+import 'package:horticade/screens/entity_details.dart';
+import 'package:horticade/screens/menu/menu_item.dart';
+import 'package:horticade/screens/order/create/product_order_entry.dart';
+import 'package:horticade/screens/order/display/pending_orders.dart';
+import 'package:horticade/screens/order/display/sent_orders.dart';
+import 'package:horticade/screens/product/inventory.dart';
+import 'package:horticade/screens/product/product_create.dart';
+import 'package:horticade/services/auth.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends PopupMenuButton {

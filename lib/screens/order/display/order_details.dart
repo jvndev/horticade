@@ -1,11 +1,11 @@
-import 'package:firebase/models/location.dart';
-import 'package:firebase/models/order.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/services/location.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_order_line.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/location.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/services/location.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_order_line.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetails extends StatefulWidget {

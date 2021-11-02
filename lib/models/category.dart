@@ -1,4 +1,4 @@
-import 'package:firebase/models/dao.dart';
+import 'package:horticade/models/dao.dart';
 
 class Category extends Dao implements Comparable<Category> {
   final String name;

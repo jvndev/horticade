@@ -1,15 +1,15 @@
-import 'package:firebase/models/category.dart';
-import 'package:firebase/models/order.dart';
-import 'package:firebase/models/product.dart';
-import 'package:firebase/models/user.dart';
-import 'package:firebase/screens/order/create/filter.dart';
-import 'package:firebase/screens/order/create/finalize_order.dart';
-import 'package:firebase/services/database.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/models/product.dart';
+import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/order/create/filter.dart';
+import 'package:horticade/screens/order/create/finalize_order.dart';
+import 'package:horticade/services/database.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase/screens/product/product_card.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
+import 'package:horticade/screens/product/product_card.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 

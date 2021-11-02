@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/models/category.dart';
+import 'package:horticade/models/category.dart';
 
 class CategoryDao {
   static Future<Category> categoryFromDocumentSnapshot(

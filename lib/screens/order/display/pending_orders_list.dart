@@ -1,8 +1,8 @@
-import 'package:firebase/models/order.dart';
-import 'package:firebase/screens/order/display/order_card.dart';
-import 'package:firebase/screens/order/display/order_details.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/screens/order/display/order_card.dart';
+import 'package:horticade/screens/order/display/order_details.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

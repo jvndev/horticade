@@ -1,5 +1,5 @@
-import 'package:firebase/models/order.dart';
-import 'package:firebase/models/product.dart';
+import 'package:horticade/models/order.dart';
+import 'package:horticade/models/product.dart';
 
 typedef VoidFunc = void Function();
 typedef OrderPredicate = bool Function(Order);

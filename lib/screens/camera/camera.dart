@@ -1,8 +1,8 @@
 import 'package:camera/camera.dart';
-import 'package:firebase/screens/camera/show_picture.dart';
-import 'package:firebase/shared/constants.dart';
-import 'package:firebase/shared/loader.dart';
-import 'package:firebase/theme/horticade_theme.dart';
+import 'package:horticade/screens/camera/show_picture.dart';
+import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
 class Camera extends StatefulWidget {

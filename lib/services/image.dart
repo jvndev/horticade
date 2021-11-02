@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firebase/models/category.dart';
-import 'package:firebase/shared/constants.dart';
+import 'package:horticade/models/category.dart';
+import 'package:horticade/shared/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
