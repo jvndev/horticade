@@ -1,6 +1,6 @@
 import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/user.dart';
-import 'package:horticade/screens/categories.dart';
+import 'package:horticade/screens/category/categories.dart';
 import 'package:horticade/screens/entity_details.dart';
 import 'package:horticade/screens/menu/menu_item.dart';
 import 'package:horticade/screens/order/create/product_order_entry.dart';

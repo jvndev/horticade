@@ -35,17 +35,19 @@ class SentOrdersList extends StatelessWidget {
                         style: HorticadeTheme.noData,
                       ),
                     )
-                  : ListView.builder(
-                      key: Key('sent_orders_list_${orders.length}'),
-                      itemCount: orders.length,
-                      itemBuilder: (context, i) => OrderCard(
-                        order: orders[i],
-                        onPressed: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                OrderDetails(order: orders[i]),
-                          ));
-                        },
+                  : Expanded(
+                      child: ListView.builder(
+                        key: Key('sent_orders_list_${orders.length}'),
+                        itemCount: orders.length,
+                        itemBuilder: (context, i) => OrderCard(
+                          order: orders[i],
+                          onPressed: () async {
+                            await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderDetails(order: orders[i]),
+                            ));
+                          },
+                        ),
                       ),
                     ),
             ],

@@ -4,6 +4,7 @@ import 'package:horticade/services/database.dart';
 import 'package:horticade/services/location.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_order_line.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Order Details'),
-        backgroundColor: HorticadeTheme.appbarBackground,
-      ),
+      appBar: HorticadeAppBar(title: 'Order Details'),
       backgroundColor: HorticadeTheme.scaffoldBackground,
       body: Column(
         children: [

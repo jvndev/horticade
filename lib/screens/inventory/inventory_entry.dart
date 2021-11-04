@@ -3,6 +3,7 @@ import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/inventory/inventory.dart';
 import 'package:horticade/services/database.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -15,17 +16,10 @@ class InventoryEntry extends StatelessWidget {
     final DatabaseService databaseService = DatabaseService();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Inventory'),
-        backgroundColor: HorticadeTheme.appbarBackground,
-        iconTheme: HorticadeTheme.appbarIconsTheme,
-        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
-        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
-      ),
+      appBar: HorticadeAppBar(title: 'Inventory'),
       backgroundColor: HorticadeTheme.scaffoldBackground,
       body: StreamProvider<Future<List<Product>>>.value(
-          value: databaseService.productStream(filters: [
+          value: DatabaseService.productStream(filters: [
             (Product product) => product.ownerUid == authUser.uid,
           ]),
           initialData: Future(() => const []),

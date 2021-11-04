@@ -15,7 +15,7 @@ class ProductsWatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<Future<List<Product>>>(
       initialData: Future(() => const <Product>[]),
-      create: (context) => databaseService.productStream(),
+      create: (context) => DatabaseService.productStream(),
       builder: (context, widget) => ProductsWatchList(authUser: authUser),
     );
   }

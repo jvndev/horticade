@@ -1,6 +1,6 @@
 import 'package:horticade/models/dao.dart';
 
-class Category extends Dao implements Comparable<Category> {
+class Category extends Dao {
   final String name;
 
   Category({
@@ -18,5 +18,16 @@ class Category extends Dao implements Comparable<Category> {
   }
 
   @override
-  int compareTo(other) => name.compareTo(other.name);
+  int get hashCode => super.hashCode;
+
+  @override
+  bool operator ==(dynamic other) {
+    if (other is! Category) {
+      return false;
+    } else {
+      return other.uid != null && uid != null
+          ? other.uid!.compareTo(uid!) == 0
+          : other.name.compareTo(name) == 0;
+    }
+  }
 }

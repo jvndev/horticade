@@ -30,9 +30,11 @@ class _OrderCardState extends State<OrderCard> {
             category: widget.order.product.category.name,
             imageFilename: widget.order.product.imageFilename)
         .then((image) {
-      setState(() {
-        _image = image;
-      });
+      if (mounted) {
+        setState(() {
+          _image = image;
+        });
+      }
     });
   }
 

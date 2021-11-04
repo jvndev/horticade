@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:horticade/screens/camera/show_picture.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -44,14 +45,7 @@ class _CameraState extends State<Camera> {
                   background: HorticadeTheme.scaffoldBackground!,
                 )
               : Scaffold(
-                  appBar: AppBar(
-                    centerTitle: true,
-                    title: const Text('Product Picture'),
-                    backgroundColor: HorticadeTheme.appbarBackground,
-                    iconTheme: HorticadeTheme.appbarIconsTheme,
-                    actionsIconTheme: HorticadeTheme.appbarIconsTheme,
-                    titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
-                  ),
+                  appBar: HorticadeAppBar(title: 'Product Picture'),
                   backgroundColor: HorticadeTheme.scaffoldBackground,
                   body: snapshot.data == null
                       ? const Text('Camera could not be accessed')

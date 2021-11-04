@@ -4,10 +4,12 @@ import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
+import 'package:horticade/screens/category/categories_dropdown.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +26,6 @@ class _ProductCreateState extends State<ProductCreate> {
   final ImageService _imageService = ImageService();
   final DatabaseService db = DatabaseService();
 
-  List<Category> _categories = [];
-
   bool _loading = false;
   String _status = '';
   String? _imagePath;
@@ -38,17 +38,8 @@ class _ProductCreateState extends State<ProductCreate> {
   @override
   void initState() {
     super.initState();
-
-    _loading = true;
-    db.categories.then((categories) {
-      setState(() {
-        _categories = categories;
-        _loading = false;
-      });
-    });
   }
 
-  // Will return null if back is pressed
   Future<void> _snap() async {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const Camera()))
@@ -61,7 +52,7 @@ class _ProductCreateState extends State<ProductCreate> {
   }
 
   Future<void> _createProduct() async {
-    AuthUser authUser = Provider.of<AuthUser>(context);
+    AuthUser authUser = Provider.of<AuthUser>(context, listen: false);
 
     if (_imagePath == null) {
       setState(() {
@@ -70,6 +61,18 @@ class _ProductCreateState extends State<ProductCreate> {
 
       return;
     }
+
+    if (_selectedCategory == null) {
+      setState(() {
+        _status = 'No category selected.';
+      });
+
+      return;
+    }
+
+    setState(() {
+      _status = '';
+    });
 
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -143,22 +146,8 @@ class _ProductCreateState extends State<ProductCreate> {
 
   @override
   Widget build(BuildContext context) {
-    final List<DropdownMenuItem<Category>> categoryItems = _categories
-        .map((Category e) => DropdownMenuItem<Category>(
-              value: e,
-              child: Text(e.name),
-            ))
-        .toList();
-
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('New Product'),
-        backgroundColor: HorticadeTheme.appbarBackground,
-        iconTheme: HorticadeTheme.appbarIconsTheme,
-        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
-        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
-      ),
+      appBar: HorticadeAppBar(title: 'New Product'),
       backgroundColor: HorticadeTheme.scaffoldBackground,
       body: SingleChildScrollView(
         child: Padding(
@@ -193,19 +182,9 @@ class _ProductCreateState extends State<ProductCreate> {
                         Row(
                           children: [
                             Expanded(
-                              child: DropdownButtonFormField<Category>(
-                                validator: (category) => category == null
-                                    ? 'Category is required'
-                                    : null,
-                                onChanged: (category) {
-                                  setState(() {
-                                    _selectedCategory = category;
-                                  });
-                                },
-                                hint: const Text("Category"),
-                                items: categoryItems,
-                                value: _selectedCategory,
-                              ),
+                              child: CategoriesDropdown(onSelect: (category) {
+                                _selectedCategory = category;
+                              }),
                             ),
                           ],
                         ),

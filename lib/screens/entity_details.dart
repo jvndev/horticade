@@ -2,6 +2,7 @@ import 'package:horticade/models/entity.dart';
 import 'package:horticade/screens/location/location_search.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -83,14 +84,7 @@ class _EntityDetailsState extends State<EntityDetails> {
     nameController.text = widget.entity.name;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Details'),
-        backgroundColor: HorticadeTheme.appbarBackground,
-        iconTheme: HorticadeTheme.appbarIconsTheme,
-        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
-        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
-      ),
+      appBar: HorticadeAppBar(title: 'Details'),
       backgroundColor: HorticadeTheme.scaffoldBackground,
       body: Padding(
         padding: formPadding,

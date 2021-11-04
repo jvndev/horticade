@@ -11,6 +11,7 @@ import 'package:horticade/services/location.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/image_display.dart';
 import 'package:horticade/shared/image_loader.dart';
+import 'package:horticade/theme/horticade_app_bar.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:horticade/shared/loader.dart';
@@ -219,14 +220,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Order ${widget.product.name}'),
-        backgroundColor: HorticadeTheme.appbarBackground,
-        iconTheme: HorticadeTheme.appbarIconsTheme,
-        actionsIconTheme: HorticadeTheme.appbarIconsTheme,
-        titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
-      ),
+      appBar: HorticadeAppBar(title: 'Order ${widget.product.name}'),
       backgroundColor: HorticadeTheme.scaffoldBackground,
       body: SingleChildScrollView(
         child: Padding(

@@ -1,7 +1,7 @@
-import 'package:horticade/models/category.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/category/categories_dropdown.dart';
 import 'package:horticade/screens/order/create/filter.dart';
 import 'package:horticade/screens/order/create/finalize_order.dart';
 import 'package:horticade/services/database.dart';
@@ -31,7 +31,6 @@ class _ProductOrderListState extends State<ProductOrderList> {
   final DatabaseService databaseService = DatabaseService();
   final TextEditingController productNameController = TextEditingController();
   final GlobalKey<FormState> priceFormKey = GlobalKey<FormState>();
-  List<DropdownMenuItem<Category>>? _categoryItems;
   String fromPrice = '', toPrice = '';
 
   Future<Order?> _confirmOrder(Product product) async =>
@@ -95,17 +94,6 @@ class _ProductOrderListState extends State<ProductOrderList> {
   void initState() {
     super.initState();
 
-    databaseService.categories.then((categories) {
-      setState(() {
-        _categoryItems = categories
-            .map((Category category) => DropdownMenuItem<Category>(
-                  value: category,
-                  child: Text(category.name),
-                ))
-            .toList();
-      });
-    });
-
     productNameController.addListener(() {
       widget.filter.name = productNameController.text;
     });
@@ -129,22 +117,8 @@ class _ProductOrderListState extends State<ProductOrderList> {
           children: [
             Expanded(
               flex: 1,
-              child: _categoryItems == null
-                  ? Loader(
-                      color: Colors.orange,
-                      background: HorticadeTheme.scaffoldBackground!,
-                    )
-                  : DropdownButtonFormField<Category>(
-                      decoration: const InputDecoration(
-                        label: Text('Category'),
-                      ),
-                      hint: const Text('Filter by Category'),
-                      value: null,
-                      items: _categoryItems,
-                      isExpanded: false,
-                      onChanged: (category) =>
-                          widget.filter.category = category,
-                    ),
+              child: CategoriesDropdown(
+                  onSelect: (category) => widget.filter.category = category),
             ),
             Expanded(
               flex: 1,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:horticade/db/category_dao.dart';
 import 'package:horticade/db/order_dao.dart';
 import 'package:horticade/db/product_dao.dart';
 import 'package:horticade/models/category.dart';
@@ -11,33 +12,6 @@ import 'package:horticade/shared/types.dart';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<Category?> createCategory(Category category) async {
-    DocumentReference ref;
-
-    try {
-      await (ref = _firestore.collection('categories').doc())
-          .set(category.toMap())
-          .timeout(awaitTimeout);
-      category.uid = ref.id;
-    } catch (e) {
-      return null;
-    }
-
-    return category;
-  }
-
-  Future<List<Category>> get categories async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _firestore.collection('categories').get().timeout(awaitTimeout);
-
-    return snapshot.docs.map((snapshot) {
-      Category category = Category(name: snapshot.data()['name']);
-      category.uid = snapshot.id;
-
-      return category;
-    }).toList();
-  }
 
   Future<List<Entity>> _findEntities(find) async {
     List<Entity> ret = [];
@@ -66,6 +40,21 @@ class DatabaseService {
         await _findEntities((QueryDocumentSnapshot qds) => qds.id == uid);
 
     return ret.isEmpty ? null : ret.first;
+  }
+
+  Future<Category?> createCategory(Category category) async {
+    DocumentReference ref;
+
+    try {
+      await (ref = _firestore.collection('categories').doc())
+          .set(category.toMap())
+          .timeout(awaitTimeout);
+      category.uid = ref.id;
+    } catch (e) {
+      return null;
+    }
+
+    return category;
   }
 
   // entity uid will be the authuser's
@@ -142,7 +131,7 @@ class DatabaseService {
   // Streams //
   /////////////
 
-  Stream<Future<List<Product>>> productStream(
+  static Stream<Future<List<Product>>> productStream(
           {List<ProductPredicate>? filters}) =>
       _firestore.collection('products').snapshots().map(
             (snapshot) => ProductDao.productsFromQuerySnapshot(
@@ -151,9 +140,19 @@ class DatabaseService {
             ),
           );
 
-  Stream<Future<List<Order>>> orderStream({List<OrderPredicate>? filters}) =>
+  static Stream<Future<List<Order>>> orderStream(
+          {List<OrderPredicate>? filters}) =>
       _firestore.collection('orders').snapshots().map(
             (snapshot) => OrderDao.ordersFromQuerySnapshot(
+              snapshot: snapshot,
+              filters: filters,
+            ),
+          );
+
+  static Stream<Future<List<Category>>> categoryStream(
+          {List<CategoryPredicate>? filters}) =>
+      _firestore.collection('categories').snapshots().map(
+            (snapshot) => CategoryDao.categoryFromQuerySnapshot(
               snapshot: snapshot,
               filters: filters,
             ),

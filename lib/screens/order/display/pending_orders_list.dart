@@ -36,17 +36,19 @@ class PendingOrdersList extends StatelessWidget {
                           style: HorticadeTheme.noData,
                         ),
                       )
-                    : ListView.builder(
-                        key: Key('pending_orders_list_${orders.length}'),
-                        itemCount: orders.length,
-                        itemBuilder: (context, i) => OrderCard(
-                          order: orders[i],
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderDetails(order: orders[i]),
-                            ));
-                          },
+                    : Expanded(
+                        child: ListView.builder(
+                          key: Key('pending_orders_list_${orders.length}'),
+                          itemCount: orders.length,
+                          itemBuilder: (context, i) => OrderCard(
+                            order: orders[i],
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    OrderDetails(order: orders[i]),
+                              ));
+                            },
+                          ),
                         ),
                       ),
               ],
