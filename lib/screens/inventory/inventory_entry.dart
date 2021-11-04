@@ -13,7 +13,6 @@ class InventoryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthUser authUser = Provider.of<AuthUser>(context);
-    final DatabaseService databaseService = DatabaseService();
 
     return Scaffold(
       appBar: HorticadeAppBar(title: 'Inventory'),

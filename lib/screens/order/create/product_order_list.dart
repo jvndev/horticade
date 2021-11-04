@@ -1,3 +1,5 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:flutter/services.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
@@ -31,7 +33,10 @@ class _ProductOrderListState extends State<ProductOrderList> {
   final DatabaseService databaseService = DatabaseService();
   final TextEditingController productNameController = TextEditingController();
   final GlobalKey<FormState> priceFormKey = GlobalKey<FormState>();
-  String fromPrice = '', toPrice = '';
+  CurrencyTextInputFormatter fromTextInputFormatter =
+      CurrencyTextInputFormatter(symbol: 'R');
+  CurrencyTextInputFormatter toTextInputFormatter =
+      CurrencyTextInputFormatter(symbol: 'R');
 
   Future<Order?> _confirmOrder(Product product) async =>
       await Navigator.of(context).push(
@@ -43,38 +48,12 @@ class _ProductOrderListState extends State<ProductOrderList> {
         ),
       );
 
-  String? priceValidator(String? val) {
-    if (val == null || val.isEmpty) {
-      // there doesn't have to be a price filter
-      return null;
-    }
-    if (!RegExp(r'^\d+$').hasMatch(val) || int.parse(val) <= 0) {
-      return 'Invalid price';
-    }
-    if (fromPrice.isNotEmpty &&
-        RegExp(r'^\d+$').hasMatch(fromPrice) &&
-        toPrice.isNotEmpty &&
-        RegExp(r'^\d+$').hasMatch(toPrice)) {
-      if (int.parse(fromPrice) > int.parse(toPrice)) {
-        return 'From price is greater than To price';
-      }
-    }
+  void fromPriceFilterChanged(Filter filter) {
+    filter.fromPrice = fromTextInputFormatter.getUnformattedValue().toDouble();
   }
 
-  void fromPriceFilterChanged(String val, Filter filter) {
-    fromPrice = val;
-
-    if (priceFormKey.currentState!.validate()) {
-      filter.fromPrice = fromPrice;
-    }
-  }
-
-  void toPriceFilterChanged(String val, Filter filter) {
-    toPrice = val;
-
-    if (priceFormKey.currentState!.validate()) {
-      filter.toPrice = toPrice;
-    }
+  void toPriceFilterChanged(Filter filter) {
+    filter.toPrice = toTextInputFormatter.getUnformattedValue().toDouble();
   }
 
   Future<List<String>> lookAheadProductNames(String search) async {
@@ -160,20 +139,23 @@ class _ProductOrderListState extends State<ProductOrderList> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        inputFormatters: <TextInputFormatter>[
+                          fromTextInputFormatter,
+                        ],
                         keyboardType: TextInputType.number,
                         decoration: textFieldDecoration('Price From'),
                         onChanged: (val) =>
-                            fromPriceFilterChanged(val, widget.filter),
-                        validator: priceValidator,
+                            fromPriceFilterChanged(widget.filter),
                       ),
                     ),
                     Expanded(
                       child: TextFormField(
+                        inputFormatters: <TextInputFormatter>[
+                          toTextInputFormatter,
+                        ],
                         keyboardType: TextInputType.number,
                         decoration: textFieldDecoration('Price To'),
-                        onChanged: (val) =>
-                            toPriceFilterChanged(val, widget.filter),
-                        validator: priceValidator,
+                        onChanged: (val) => toPriceFilterChanged(widget.filter),
                       ),
                     ),
                   ],

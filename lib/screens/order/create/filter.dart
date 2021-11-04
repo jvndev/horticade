@@ -31,16 +31,16 @@ class Filter with ChangeNotifier {
     notifyListeners();
   }
 
-  set fromPrice(String fromPrice) {
+  set fromPrice(double fromPrice) {
     filters['fromPrice'] = (Product product) =>
-        fromPrice.isEmpty ? true : product.cost >= int.parse(fromPrice);
+        fromPrice == 0.0 ? true : product.cost >= fromPrice;
 
     notifyListeners();
   }
 
-  set toPrice(String toPrice) {
-    filters['toPrice'] = (Product product) =>
-        toPrice.isEmpty ? true : product.cost <= int.parse(toPrice);
+  set toPrice(double toPrice) {
+    filters['toPrice'] =
+        (Product product) => toPrice == 0.0 ? true : product.cost <= toPrice;
 
     notifyListeners();
   }

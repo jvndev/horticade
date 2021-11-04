@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:flutter/services.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
@@ -25,6 +27,8 @@ class _ProductCreateState extends State<ProductCreate> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ImageService _imageService = ImageService();
   final DatabaseService db = DatabaseService();
+  final CurrencyTextInputFormatter currencyTextInputFormatter =
+      CurrencyTextInputFormatter(symbol: 'R');
 
   bool _loading = false;
   String _status = '';
@@ -95,7 +99,7 @@ class _ProductCreateState extends State<ProductCreate> {
         product = await db.createProduct(Product(
           ownerUid: authUser.uid,
           name: nameController.text,
-          cost: double.parse(costController.text),
+          cost: currencyTextInputFormatter.getUnformattedValue().toDouble(),
           category: _selectedCategory as Category,
           imageFilename: imageFilename,
           qty: int.parse(qtyController.text),
@@ -201,17 +205,14 @@ class _ProductCreateState extends State<ProductCreate> {
                                       return 'Price is required';
                                     }
 
-                                    if (!RegExp(r'^\d+\.?\d{0,2}$')
-                                            .hasMatch(price) ||
-                                        double.parse(price) <= 0) {
-                                      return 'Invalid price.';
-                                    }
-
                                     return null;
                                   },
                                   decoration: textFieldDecoration('Price'),
                                   controller: costController,
                                   keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    currencyTextInputFormatter,
+                                  ],
                                 ),
                               ),
                             ),

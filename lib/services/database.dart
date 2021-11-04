@@ -5,7 +5,6 @@ import 'package:horticade/db/order_dao.dart';
 import 'package:horticade/db/product_dao.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/entity.dart';
-import 'package:horticade/models/location.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/shared/constants.dart';

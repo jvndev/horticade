@@ -86,7 +86,7 @@ class Menu extends PopupMenuButton {
                 break;
               case 'ordersReceived':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PendingOrders(),
+                  builder: (context) => const PendingOrders(),
                 ));
                 break;
               case 'inventory':
