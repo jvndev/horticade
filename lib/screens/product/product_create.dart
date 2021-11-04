@@ -16,6 +16,23 @@ import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class NameTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    if (text.isNotEmpty) {
+      return TextEditingValue(
+        text: '${text[0].toUpperCase()}' '${text.substring(1)}',
+        selection: newValue.selection,
+      );
+    } else {
+      return newValue;
+    }
+  }
+}
+
 class ProductCreate extends StatefulWidget {
   const ProductCreate({Key? key}) : super(key: key);
 
@@ -38,11 +55,6 @@ class _ProductCreateState extends State<ProductCreate> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController costController = TextEditingController();
   final TextEditingController qtyController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   Future<void> _snap() async {
     Navigator.of(context)
@@ -182,6 +194,9 @@ class _ProductCreateState extends State<ProductCreate> {
                               : null,
                           decoration: textFieldDecoration('Product Name'),
                           controller: nameController,
+                          inputFormatters: <TextInputFormatter>[
+                            NameTextFormatter(),
+                          ],
                         ),
                         Row(
                           children: [
