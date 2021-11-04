@@ -109,86 +109,6 @@ class DatabaseService {
     }
   }
 
-  Future<List<Product>> findProductsByNameExcludeOwned(
-          Category category, String name, String ownerUid) =>
-      _findProducts(
-        category,
-        (QueryDocumentSnapshot qds) {
-          Map data = qds.data() as Map<String, dynamic>;
-          String productName = (data['name'] as String).trim().toLowerCase();
-
-          if (data['owner_uid'] == ownerUid) {
-            return false;
-          }
-
-          return name.isEmpty ? true : productName.contains(name.toLowerCase());
-        },
-      );
-
-  Future<List<Product>> _findProducts(Category category, find) async {
-    QuerySnapshot productsSnapshot =
-        await _firestore.collection('products').get();
-    DocumentReference categoryRef =
-        _firestore.collection('categories').doc(category.uid);
-
-    return productsSnapshot.docs
-        .where((QueryDocumentSnapshot qds) {
-          Map data = qds.data() as Map<String, dynamic>;
-
-          return data['category'] == categoryRef;
-        })
-        .where(find)
-        .map((QueryDocumentSnapshot qds) {
-          Map data = qds.data() as Map<String, dynamic>;
-
-          Product product = Product(
-            ownerUid: data['owner_uid'],
-            name: data['name'],
-            cost: data['cost'],
-            category: category,
-            imageFilename: data['image_filename'],
-            qty: data['qty'],
-          );
-          product.uid = qds.id;
-
-          return product;
-        })
-        .toList();
-  }
-
-  Future<List<Order>> sentOrders(String uid) async {
-    List<Order> orders = [];
-    QuerySnapshot<Map<String, dynamic>> ordersSnapshot = await _firestore
-        .collection('orders')
-        .where('client_uid', isEqualTo: uid)
-        .get();
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> orderSnapshot
-        in ordersSnapshot.docs) {
-      Map data = orderSnapshot.data();
-      DocumentReference<Map<String, dynamic>> productRef = data['product'];
-
-      orders.add(Order(
-        clientUid: data['client_uid'],
-        fulfillerUid: data['fulfiller_uid'],
-        product: await ProductDao.productFromDocumentSnapshot(
-            await productRef.get()),
-        qty: data['qty'],
-        fulfilled: data['fulfilled'],
-        location: Location(
-          address: data['address'],
-          geocode: data['geocode'],
-        ),
-        created: (data['created'] as Timestamp).toDate(),
-        deliverBy: data['deliver_by'] == null
-            ? null
-            : (data['deliver_by'] as Timestamp).toDate(),
-      ));
-    }
-
-    return orders;
-  }
-
   Future<Order?> createOrder(Order order, Product product) async {
     try {
       DocumentReference productRef =
@@ -218,7 +138,9 @@ class DatabaseService {
     }
   }
 
+  /////////////
   // Streams //
+  /////////////
 
   Stream<Future<List<Product>>> productStream(
           {List<ProductPredicate>? filters}) =>
@@ -229,11 +151,11 @@ class DatabaseService {
             ),
           );
 
-  Stream<Future<List<Order>>> pendingOrderStream({OrderPredicate? filter}) =>
+  Stream<Future<List<Order>>> orderStream({List<OrderPredicate>? filters}) =>
       _firestore.collection('orders').snapshots().map(
             (snapshot) => OrderDao.ordersFromQuerySnapshot(
               snapshot: snapshot,
-              filter: filter,
+              filters: filters,
             ),
           );
 }

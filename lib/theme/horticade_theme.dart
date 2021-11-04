@@ -65,4 +65,8 @@ class HorticadeTheme {
     fontWeight: FontWeight.bold,
     fontSize: 16.0,
   );
+  static const noData = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16.0,
+  );
 }

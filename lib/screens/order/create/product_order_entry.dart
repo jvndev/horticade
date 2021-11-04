@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductOrderEntry extends StatelessWidget {
-  final AuthUser authUser;
-
-  const ProductOrderEntry({Key? key, required this.authUser}) : super(key: key);
+  const ProductOrderEntry({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AuthUser authUser = Provider.of<AuthUser>(context);
+
     return ChangeNotifierProvider<Filter>(
       create: (context) => Filter(authUser: authUser),
       builder: (context, widget) => Consumer(

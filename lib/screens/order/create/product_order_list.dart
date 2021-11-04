@@ -223,7 +223,7 @@ class _ProductOrderListState extends State<ProductOrderList> {
                           ),
                         )
                       : ListView.builder(
-                          key: Key('product_order_list${products.length}'),
+                          key: Key('product_order_list_${products.length}'),
                           itemCount: products.length,
                           itemBuilder: (context, i) => ProductCard(
                             product: products![i],

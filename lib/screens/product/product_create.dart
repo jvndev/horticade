@@ -10,11 +10,10 @@ import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductCreate extends StatefulWidget {
-  final AuthUser authUser;
-
-  const ProductCreate({Key? key, required this.authUser}) : super(key: key);
+  const ProductCreate({Key? key}) : super(key: key);
 
   @override
   State<ProductCreate> createState() => _ProductCreateState();
@@ -62,6 +61,8 @@ class _ProductCreateState extends State<ProductCreate> {
   }
 
   Future<void> _createProduct() async {
+    AuthUser authUser = Provider.of<AuthUser>(context);
+
     if (_imagePath == null) {
       setState(() {
         _status = 'No product picture taken. Tap the image circle above.';
@@ -77,7 +78,7 @@ class _ProductCreateState extends State<ProductCreate> {
       });
 
       String? imageFilename = await _imageService.storeImage(
-        uid: widget.authUser.uid,
+        uid: authUser.uid,
         localPath: _imagePath as String,
         category: _selectedCategory as Category,
       );
@@ -89,7 +90,7 @@ class _ProductCreateState extends State<ProductCreate> {
         return;
       } else {
         product = await db.createProduct(Product(
-          ownerUid: widget.authUser.uid,
+          ownerUid: authUser.uid,
           name: nameController.text,
           cost: double.parse(costController.text),
           category: _selectedCategory as Category,

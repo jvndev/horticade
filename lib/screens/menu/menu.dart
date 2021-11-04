@@ -71,26 +71,22 @@ class Menu extends PopupMenuButton {
             switch (val) {
               case 'createProduct':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProductCreate(
-                    authUser: authUser,
-                  ),
+                  builder: (context) => const ProductCreate(),
                 ));
                 break;
               case 'submitOrder':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProductOrderEntry(
-                    authUser: authUser,
-                  ),
+                  builder: (context) => const ProductOrderEntry(),
                 ));
                 break;
               case 'ordersSent':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SentOrders(authUser: authUser),
+                  builder: (context) => SentOrders(),
                 ));
                 break;
               case 'ordersReceived':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PendingOrders(authUser: authUser),
+                  builder: (context) => PendingOrders(),
                 ));
                 break;
               case 'inventory':

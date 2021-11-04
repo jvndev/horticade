@@ -3,7 +3,6 @@ import 'package:horticade/models/product.dart';
 import 'package:horticade/screens/inventory/inventory_bottom_sheet.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/services/database.dart';
-import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';

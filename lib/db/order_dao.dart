@@ -7,7 +7,7 @@ import 'package:horticade/shared/types.dart';
 class OrderDao {
   static Future<List<Order>> ordersFromQuerySnapshot({
     required QuerySnapshot<Map<String, dynamic>> snapshot,
-    OrderPredicate? filter,
+    List<OrderPredicate>? filters,
   }) async {
     List<Order> orders = [];
 
@@ -15,8 +15,10 @@ class OrderDao {
       orders.add(await orderFromQueryDocumentSnapshot(qds));
     }
 
-    if (filter != null) {
-      orders = orders.where(filter).toList();
+    if (filters != null) {
+      for (OrderPredicate filter in filters) {
+        orders = orders.where(filter).toList();
+      }
     }
 
     return orders;
