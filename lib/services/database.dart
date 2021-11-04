@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horticade/db/category_dao.dart';
+import 'package:horticade/db/entity_dao.dart';
 import 'package:horticade/db/order_dao.dart';
 import 'package:horticade/db/product_dao.dart';
 import 'package:horticade/models/category.dart';
@@ -13,32 +14,18 @@ import 'package:horticade/shared/types.dart';
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<Entity>> _findEntities(find) async {
-    List<Entity> ret = [];
-    QuerySnapshot qs = await _firestore.collection('entities').get();
-
-    var entityDocumentSnapshots = qs.docs.where(find);
-
-    for (var snapshot in entityDocumentSnapshots) {
-      Map entityData = snapshot.data() as Map<String, dynamic>;
-
-      ret.add(Entity(
-        uid: snapshot.id,
-        name: entityData['name'],
-        location: Location(
-          address: entityData['address'],
-          geocode: entityData['geocode'],
-        ),
-      ));
-    }
-
-    return ret;
-  }
-
   Future<Entity?> findEntity(String uid) async {
-    List<Entity> ret =
-        await _findEntities((QueryDocumentSnapshot qds) => qds.id == uid);
+    List<Entity> ret = [];
+    QuerySnapshot<Map<String, dynamic>> qs =
+        await _firestore.collection('entities').get();
 
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> entityDocumentSnapshots =
+        qs.docs.where((QueryDocumentSnapshot qds) => qds.id == uid).toList();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> snapshot
+        in entityDocumentSnapshots) {
+      ret.add(await EntityDao.entityFromQueryDocumentSnapshot(snapshot));
+    }
     return ret.isEmpty ? null : ret.first;
   }
 
