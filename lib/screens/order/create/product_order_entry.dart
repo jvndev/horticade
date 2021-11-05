@@ -1,5 +1,5 @@
 import 'package:horticade/models/user.dart';
-import 'package:horticade/screens/order/create/filter.dart';
+import 'package:horticade/screens/order/create/order_filter.dart';
 import 'package:horticade/screens/order/create/product_order.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +11,8 @@ class ProductOrderEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthUser authUser = Provider.of<AuthUser>(context);
 
-    return ChangeNotifierProvider<Filter>(
-      create: (context) => Filter(authUser: authUser),
+    return ChangeNotifierProvider<OrderFilter>(
+      create: (context) => OrderFilter(authUser: authUser),
       builder: (context, widget) => Consumer(
         builder: (context, widget, child) {
           return ProductOrder(

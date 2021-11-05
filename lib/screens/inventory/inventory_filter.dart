@@ -5,12 +5,13 @@ import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/types.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 
-typedef TypeAheadChangedFunc = void Function(List<Product>);
+typedef TypeAheadChangedFunc = void Function(String);
+typedef TypeAheadSelectedFunc = void Function(Product);
 
 class InventoryFilter extends StatelessWidget {
   final List<Product> products;
-  final VoidProductFunc onSelected;
   final TypeAheadChangedFunc onChanged;
+  final TypeAheadSelectedFunc onSelected;
   final TextEditingController nameFilterController = TextEditingController();
 
   InventoryFilter({
@@ -26,7 +27,7 @@ class InventoryFilter extends StatelessWidget {
             product.name.toLowerCase().contains(search.toLowerCase()))
         .toList();
 
-    onChanged(_products);
+    onChanged(search);
 
     return _products;
   }

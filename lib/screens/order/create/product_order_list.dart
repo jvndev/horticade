@@ -4,7 +4,7 @@ import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/category/categories_dropdown.dart';
-import 'package:horticade/screens/order/create/filter.dart';
+import 'package:horticade/screens/order/create/order_filter.dart';
 import 'package:horticade/screens/order/create/finalize_order.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/theme/horticade_theme.dart';
@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 
 class ProductOrderList extends StatefulWidget {
   final AuthUser authUser;
-  final Filter filter;
+  final OrderFilter filter;
 
   const ProductOrderList({
     Key? key,
@@ -48,11 +48,11 @@ class _ProductOrderListState extends State<ProductOrderList> {
         ),
       );
 
-  void fromPriceFilterChanged(Filter filter) {
+  void fromPriceFilterChanged(OrderFilter filter) {
     filter.fromPrice = fromTextInputFormatter.getUnformattedValue().toDouble();
   }
 
-  void toPriceFilterChanged(Filter filter) {
+  void toPriceFilterChanged(OrderFilter filter) {
     filter.toPrice = toTextInputFormatter.getUnformattedValue().toDouble();
   }
 

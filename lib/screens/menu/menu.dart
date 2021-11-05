@@ -91,7 +91,7 @@ class Menu extends PopupMenuButton {
                 break;
               case 'inventory':
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const InventoryEntry(),
+                  builder: (context) => InventoryEntry(),
                 ));
                 break;
               case 'categories':

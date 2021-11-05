@@ -1,6 +1,6 @@
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
-import 'package:horticade/screens/order/create/filter.dart';
+import 'package:horticade/screens/order/create/order_filter.dart';
 import 'package:horticade/screens/order/create/product_order_list.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
@@ -21,10 +21,10 @@ class ProductOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Filter filter = Provider.of<Filter>(context);
+    OrderFilter filter = Provider.of<OrderFilter>(context);
 
     return StreamProvider<Future<List<Product>>>.value(
-      value: DatabaseService.productStream(filters: filter.getFilters),
+      value: DatabaseService.productStream(filters: filter.filters),
       initialData: Future(() => const <Product>[]),
       builder: (context, widget) => Scaffold(
         appBar: HorticadeAppBar(title: 'Place Order'),

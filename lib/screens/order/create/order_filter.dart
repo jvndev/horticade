@@ -4,20 +4,21 @@ import 'package:horticade/models/user.dart';
 import 'package:horticade/shared/types.dart';
 import 'package:flutter/cupertino.dart';
 
-class Filter with ChangeNotifier {
+class OrderFilter with ChangeNotifier {
   final AuthUser authUser;
-  final Map<String, ProductPredicate> filters = {};
+  final Map<String, ProductPredicate> _filters = {};
 
-  Filter({required this.authUser}) {
-    filters['notOwned'] = (Product product) => product.ownerUid != authUser.uid;
-    filters['name'] = (Product product) => true;
-    filters['category'] = (Product product) => true;
-    filters['fromPrice'] = (Product product) => true;
-    filters['toPrice'] = (Product product) => true;
+  OrderFilter({required this.authUser}) {
+    _filters['notOwned'] =
+        (Product product) => product.ownerUid != authUser.uid;
+    _filters['name'] = (Product product) => true;
+    _filters['category'] = (Product product) => true;
+    _filters['fromPrice'] = (Product product) => true;
+    _filters['toPrice'] = (Product product) => true;
   }
 
   set name(String name) {
-    filters['name'] = (Product product) => name.isEmpty
+    _filters['name'] = (Product product) => name.isEmpty
         ? true
         : product.name.toLowerCase().contains(name.toLowerCase());
 
@@ -25,25 +26,25 @@ class Filter with ChangeNotifier {
   }
 
   set category(Category? category) {
-    filters['category'] = (Product product) =>
+    _filters['category'] = (Product product) =>
         category == null ? true : product.category.name == category.name;
 
     notifyListeners();
   }
 
   set fromPrice(double fromPrice) {
-    filters['fromPrice'] = (Product product) =>
+    _filters['fromPrice'] = (Product product) =>
         fromPrice == 0.0 ? true : product.cost >= fromPrice;
 
     notifyListeners();
   }
 
   set toPrice(double toPrice) {
-    filters['toPrice'] =
+    _filters['toPrice'] =
         (Product product) => toPrice == 0.0 ? true : product.cost <= toPrice;
 
     notifyListeners();
   }
 
-  List<ProductPredicate> get getFilters => filters.values.toList();
+  List<ProductPredicate> get filters => _filters.values.toList();
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/screens/inventory/inventory_bottom_sheet.dart';
 import 'package:horticade/screens/inventory/inventory_filter.dart';
+import 'package:horticade/screens/inventory/product_filter.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/loader.dart';
@@ -10,9 +11,10 @@ import 'package:provider/provider.dart';
 
 class InventoryList extends StatelessWidget {
   final DatabaseService databaseService = DatabaseService();
+  final ProductFilter productFilter;
   Product? selectedProduct;
 
-  InventoryList({Key? key}) : super(key: key);
+  InventoryList({Key? key, required this.productFilter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,11 @@ class InventoryList extends StatelessWidget {
                   products: products,
                   onSelected: (product) {
                     selectedProduct = product;
+                    productFilter.name = product.name;
                   },
-                  onChanged: (products) {},
+                  onChanged: (search) {
+                    productFilter.name = search;
+                  },
                 ),
               ),
               Expanded(
