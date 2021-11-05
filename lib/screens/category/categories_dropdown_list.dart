@@ -9,7 +9,7 @@ import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesDropdownList extends StatefulWidget {
-  final NullCatetegoryVoidFunc onSelect;
+  final VoidCatetegoryVoidFunc onSelect;
 
   CategoriesDropdownList({Key? key, required this.onSelect}) : super(key: key);
 

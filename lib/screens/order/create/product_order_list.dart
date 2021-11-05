@@ -123,7 +123,7 @@ class _ProductOrderListState extends State<ProductOrderList> {
                   controller: productNameController,
                 ),
                 noItemsFoundBuilder: (context) => const Text(
-                  'No Matching Items',
+                  'No Matching Products',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

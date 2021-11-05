@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class CategoriesDropdown extends StatelessWidget {
   final DatabaseService databaseService = DatabaseService();
-  final NullCatetegoryVoidFunc onSelect;
+  final VoidCatetegoryVoidFunc onSelect;
 
   CategoriesDropdown({Key? key, required this.onSelect}) : super(key: key);
 
