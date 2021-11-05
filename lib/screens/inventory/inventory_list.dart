@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/screens/inventory/inventory_bottom_sheet.dart';
-import 'package:horticade/screens/inventory/inventory_filter.dart';
+import 'package:horticade/screens/inventory/inventory_bottom_sheet_loader.dart';
 import 'package:horticade/screens/inventory/product_filter.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/services/database.dart';
+import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';
 
-class InventoryList extends StatelessWidget {
-  final DatabaseService databaseService = DatabaseService();
-  final ProductFilter productFilter;
-  Product? selectedProduct;
+class InventoryList extends StatefulWidget {
+  final ProductFilter filter;
 
-  InventoryList({Key? key, required this.productFilter}) : super(key: key);
+  const InventoryList({
+    Key? key,
+    required this.filter,
+  }) : super(key: key);
+
+  @override
+  State<InventoryList> createState() => _InventoryListState();
+}
+
+class _InventoryListState extends State<InventoryList> {
+  final DatabaseService databaseService = DatabaseService();
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    nameController.addListener(() {
+      widget.filter.name = nameController.text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +47,16 @@ class InventoryList extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: InventoryFilter(
-                  products: products,
-                  onSelected: (product) {
-                    selectedProduct = product;
-                    productFilter.name = product.name;
-                  },
-                  onChanged: (search) {
-                    productFilter.name = search;
-                  },
+                child: TextField(
+                  controller: nameController,
+                  decoration: textFieldDecoration('Filter by Product Name'),
                 ),
               ),
               Expanded(
                 flex: 10,
                 child: ListView.builder(
+                  key: Key('inventory_list_${products.length}'),
                   itemCount: products.length,
-                  key: Key('grouped_list_view_${products.length}'),
                   itemBuilder: (context, i) => ProductCard(
                     product: products[i],
                     onTap: () {
@@ -52,7 +65,7 @@ class InventoryList extends StatelessWidget {
                         builder: (context) => InventoryBottomSheet(
                           product: products[i],
                           onChange: (Product product) async {
-                            await databaseService.createProduct(products[i]);
+                            await databaseService.createProduct(product);
                           },
                         ),
                       );

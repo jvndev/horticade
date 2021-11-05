@@ -4,11 +4,11 @@ import 'package:horticade/shared/types.dart';
 
 class ProductFilter with ChangeNotifier {
   ProductFilter({required AuthUser authUser}) {
-    _filters['owner'] = (product) => product.ownerUid == authUser.uid;
+    _filters['owned'] = (product) => product.ownerUid == authUser.uid;
   }
 
   final _filters = <String, ProductPredicate>{
-    'owner': (product) => true,
+    'owned': (product) => true,
     'name': (product) => true,
   };
 
