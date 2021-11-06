@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 class CategoriesDropdownList extends StatefulWidget {
   final VoidCatetegoryVoidFunc onSelect;
 
-  CategoriesDropdownList({Key? key, required this.onSelect}) : super(key: key);
+  const CategoriesDropdownList({Key? key, required this.onSelect})
+      : super(key: key);
 
   @override
   State<CategoriesDropdownList> createState() => _CategoriesDropdownListState();

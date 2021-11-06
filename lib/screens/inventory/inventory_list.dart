@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/screens/inventory/inventory_bottom_sheet.dart';
-import 'package:horticade/screens/inventory/inventory_bottom_sheet_loader.dart';
 import 'package:horticade/screens/inventory/product_filter.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/services/database.dart';
@@ -24,14 +24,28 @@ class InventoryList extends StatefulWidget {
 
 class _InventoryListState extends State<InventoryList> {
   final DatabaseService databaseService = DatabaseService();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController productNameController = TextEditingController();
+
+  void productNameSelected(String name) {
+    widget.filter.name = name;
+    setState(() {
+      productNameController.text = name;
+    });
+  }
+
+  Future<List<String>> searchProductNames(String search) async {
+    List<Product> products =
+        await Provider.of<Future<List<Product>>>(context, listen: false);
+
+    return products.map((e) => e.name).toList();
+  }
 
   @override
   void initState() {
     super.initState();
 
-    nameController.addListener(() {
-      widget.filter.name = nameController.text;
+    productNameController.addListener(() {
+      widget.filter.name = productNameController.text;
     });
   }
 
@@ -47,9 +61,31 @@ class _InventoryListState extends State<InventoryList> {
             children: [
               Expanded(
                 flex: 2,
-                child: TextField(
-                  controller: nameController,
-                  decoration: textFieldDecoration('Filter by Product Name'),
+                child: TypeAheadFormField<String>(
+                  loadingBuilder: (context) => Loader(
+                    color: Colors.orange,
+                    background: HorticadeTheme.lookAheadTileColor!,
+                  ),
+                  itemBuilder: (context, productName) => ListTile(
+                    tileColor: HorticadeTheme.lookAheadTileColor,
+                    title: Text(
+                      productName,
+                      style: HorticadeTheme.lookAheadDropdownTextStyle,
+                    ),
+                  ),
+                  onSuggestionSelected: productNameSelected,
+                  suggestionsCallback: searchProductNames,
+                  textFieldConfiguration: TextFieldConfiguration(
+                    decoration: textFieldDecoration('Filter by Product Name'),
+                    controller: productNameController,
+                  ),
+                  noItemsFoundBuilder: (context) => const Text(
+                    'No Matching Products',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
