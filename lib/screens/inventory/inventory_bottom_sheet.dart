@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/shared/constants.dart';
+import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 
 typedef InventoryFunc = void Function(Product);
@@ -30,10 +31,10 @@ class InventoryBottomSheet extends StatelessWidget {
       GlobalKey<FormState> _dialogKey = GlobalKey<FormState>();
       TextEditingController qtyController = TextEditingController();
 
-      int? qty = await showDialog(
+      await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Alter ${product.name} Quantity"),
+        builder: (context) => HorticadeConfirmationDialog(
+          title: "Alter ${product.name} Quantity",
           content: Form(
             key: _dialogKey,
             child: Column(
@@ -57,28 +58,19 @@ class InventoryBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          actions: [
-            IconButton(
-              color: Colors.black,
-              onPressed: () => Navigator.of(context).pop(null),
-              icon: const Icon(Icons.clear),
-            ),
-            IconButton(
-              color: Colors.greenAccent,
-              onPressed: () {
-                if (_dialogKey.currentState!.validate()) {
-                  Navigator.of(context).pop(int.parse(qtyController.text));
-                }
-              },
-              icon: const Icon(Icons.check),
-            ),
-          ],
+          accept: () async {
+            if (_dialogKey.currentState!.validate()) {
+              int qty = int.parse(qtyController.text);
+
+              await _alterQuantity(product, qty);
+              Navigator.of(context).pop();
+            }
+          },
+          reject: () {
+            Navigator.of(context).pop();
+          },
         ),
       );
-
-      if (qty != null) {
-        await _alterQuantity(product, qty);
-      }
     }
 
     return Wrap(

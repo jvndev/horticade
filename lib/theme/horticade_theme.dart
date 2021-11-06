@@ -69,4 +69,9 @@ class HorticadeTheme {
     fontWeight: FontWeight.bold,
     fontSize: 16.0,
   );
+
+  static final confirmationDialogBackground = Colors.grey[700];
+  static const confirmationDialogTitleStyle = TextStyle(
+    color: Colors.orange,
+  );
 }

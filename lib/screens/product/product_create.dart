@@ -12,6 +12,7 @@ import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_app_bar.dart';
+import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -127,21 +128,11 @@ class _ProductCreateState extends State<ProductCreate> {
       } else {
         bool? again = await showDialog<bool>(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Product Created!'),
+          builder: (context) => HorticadeConfirmationDialog(
+            title: 'Product Created!',
             content: const Text('Create another product?'),
-            actions: [
-              IconButton(
-                color: Colors.black,
-                onPressed: () => Navigator.of(context).pop(false),
-                icon: const Icon(Icons.clear),
-              ),
-              IconButton(
-                color: Colors.greenAccent,
-                onPressed: () => Navigator.of(context).pop(true),
-                icon: const Icon(Icons.check),
-              ),
-            ],
+            accept: () => Navigator.of(context).pop(true),
+            reject: () => Navigator.of(context).pop(false),
           ),
         );
 

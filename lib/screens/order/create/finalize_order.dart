@@ -3,6 +3,7 @@ import 'package:horticade/models/location.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
+import 'package:horticade/screens/location/location_search.dart';
 import 'package:horticade/screens/order/create/delivery_address_dialog.dart';
 import 'package:horticade/screens/order/create/delivery_date_row.dart';
 import 'package:horticade/services/database.dart';
@@ -12,6 +13,7 @@ import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/image_display.dart';
 import 'package:horticade/shared/image_loader.dart';
 import 'package:horticade/theme/horticade_app_bar.dart';
+import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:horticade/shared/loader.dart';
@@ -102,13 +104,19 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
     if (useDefault != null && !useDefault) {
       bool? ret = await showDialog(
         context: context,
-        builder: (context) => DeliveryAddressDialog(
-          context: context,
-          onLocationSelected: (location) {
-            setState(() {
-              newDeliveryLocation = location;
-            });
-          },
+        builder: (context) => HorticadeConfirmationDialog(
+          title: 'Delivery Address',
+          content: Column(
+            children: [
+              LocationSearch(onSelected: (location) {
+                setState(() {
+                  newDeliveryLocation = location;
+                });
+              }),
+            ],
+          ),
+          accept: () => Navigator.of(context).pop(true),
+          reject: () => Navigator.of(context).pop(false),
         ),
       );
 
@@ -185,15 +193,11 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
 
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(orderStatus),
-          actions: [
-            IconButton(
-              color: Colors.greenAccent,
-              onPressed: () => Navigator.of(context).pop(true),
-              icon: const Icon(Icons.check),
-            ),
-          ],
+        builder: (context) => HorticadeConfirmationDialog(
+          title: orderStatus,
+          accept: () {
+            Navigator.of(context).pop();
+          },
         ),
       );
 

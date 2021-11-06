@@ -3,6 +3,7 @@ import 'package:horticade/screens/location/location_search.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/theme/horticade_app_bar.dart';
+import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -65,16 +66,11 @@ class _EntityDetailsState extends State<EntityDetails> {
   void notify(String msg) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(msg),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.check),
-          ),
-        ],
+      builder: (context) => HorticadeConfirmationDialog(
+        title: msg,
+        accept: () {
+          Navigator.of(context).pop();
+        },
       ),
     );
   }

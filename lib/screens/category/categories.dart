@@ -4,6 +4,7 @@ import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_app_bar.dart';
+import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -61,19 +62,11 @@ class _CategoriesState extends State<Categories> {
 
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: Text(status),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(
-                Icons.check,
-                color: Colors.greenAccent,
-              ),
-            ),
-          ],
+        builder: (context) => HorticadeConfirmationDialog(
+          title: status,
+          accept: () {
+            Navigator.of(context).pop();
+          },
         ),
       );
     }
