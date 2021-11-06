@@ -1,8 +1,8 @@
-import 'package:horticade/models/dao.dart';
 import 'package:horticade/models/location.dart';
 import 'package:horticade/models/product.dart';
 
-class Order extends Dao {
+class Order {
+  String? uid;
   final String clientUid;
   final String fulfillerUid; // owner of the product (product.owner)
   final Product product;
@@ -22,10 +22,4 @@ class Order extends Dao {
     required this.created,
     required this.deliverBy,
   });
-
-  @override
-  Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
-  }
 }

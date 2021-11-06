@@ -1,7 +1,7 @@
 import 'package:horticade/models/category.dart';
-import 'package:horticade/models/dao.dart';
 
-class Product extends Dao implements Comparable<Product> {
+class Product implements Comparable<Product> {
+  String? uid;
   final String ownerUid;
   final String name;
   final double cost;
@@ -17,12 +17,6 @@ class Product extends Dao implements Comparable<Product> {
     required this.imageFilename,
     required this.qty,
   });
-
-  @override
-  Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
-  }
 
   @override
   int compareTo(Product other) {

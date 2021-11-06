@@ -1,17 +1,16 @@
-import 'package:horticade/models/dao.dart';
 import 'package:horticade/models/location.dart';
 
-class Entity extends Dao {
+class Entity {
+  final String uid;
   final String name;
   final Location location;
 
   Entity({
-    required uid, // FirebaseAuth user uid
+    required this.uid, // FirebaseAuth user uid
     required this.name,
     required this.location,
-  }) : super(uid: uid);
+  });
 
-  @override
   Map<String, dynamic> toMap() => {
         'name': name,
         'address': location.address,

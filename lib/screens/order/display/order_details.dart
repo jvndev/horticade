@@ -33,9 +33,11 @@ class _OrderDetailsState extends State<OrderDetails> {
       Location orderLocation = widget.order.location;
 
       locationService.distance(productLocation, orderLocation).then((distance) {
-        setState(() {
-          _distance = distance;
-        });
+        if (mounted) {
+          setState(() {
+            _distance = distance;
+          });
+        }
       });
     });
   }
