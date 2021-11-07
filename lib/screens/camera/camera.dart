@@ -14,63 +14,129 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
-  Future<CameraController?> _getCameraController() async {
-    List<CameraDescription> cameras = await availableCameras();
-    CameraController? controller = cameras.isEmpty
-        ? null
-        : CameraController(
-            cameras.first,
-            cameraResolution,
-            imageFormatGroup: ImageFormatGroup.jpeg,
-            enableAudio: false,
-          );
+  List<CameraDescription> cameras = [];
+  List<Widget> cameraActions = []; // front & back facing options
+  CameraController? camera;
+  CameraPreview? cameraPreview;
+  String error = '';
 
-    try {
-      await controller?.initialize().timeout(awaitTimeout);
-    } on CameraException {
-      return null;
+  @override
+  void initState() {
+    super.initState();
+
+    availableCameras().then((cameras) {
+      this.cameras = cameras;
+
+      if (this.cameras.isNotEmpty) {
+        setState(() {
+          cameraActions = cameras
+              .map((cameraDesc) => IconButton(
+                  icon: Icon(
+                      cameraDesc.lensDirection == CameraLensDirection.front
+                          ? Icons.camera_front
+                          : Icons.photo_camera_back),
+                  onPressed: () {
+                    setCamera(cameraDesc);
+                  }))
+              .toList();
+          defaultCamera();
+        });
+      } else {
+        setState(() {
+          error = 'No Cameras detected';
+        });
+      }
+    });
+  }
+
+  Future<void> setCamera(CameraDescription? cameraDesc) async {
+    if (cameraDesc != null) {
+      camera = CameraController(
+        cameraDesc,
+        cameraResolution,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+        enableAudio: false,
+      );
+
+      try {
+        await camera!.initialize().timeout(awaitTimeout);
+        // TODO //
+        await camera!.setFlashMode(FlashMode.off);
+        setState(() {
+          cameraPreview = CameraPreview(camera!);
+        });
+      } on CameraException {
+        camera = null;
+        setState(() {
+          error = 'Failed to initialize camera';
+        });
+      }
+    } else {
+      camera = null;
+      setState(() {
+        error = 'Failed to initialize camera';
+      });
     }
+  }
 
-    return controller;
+  // Start with backfacing camera if the phone has it.
+  void defaultCamera() {
+    if (cameras.length == 1) {
+      setCamera(cameras.first);
+    } else if (cameras.length > 1) {
+      CameraDescription? backCameraDesc = cameras
+          .firstWhere((desc) => desc.lensDirection == CameraLensDirection.back);
+
+      setCamera(backCameraDesc);
+    } else {
+      camera = null;
+    }
+  }
+
+  Widget loader() {
+    return error.isNotEmpty
+        ? Text(error)
+        : const Loader(
+            color: Colors.orange,
+            background: Colors.black,
+          );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<CameraController?>(
-      future: _getCameraController(),
-      builder: (context, snapshot) =>
-          snapshot.connectionState != ConnectionState.done
-              ? Loader(
-                  color: Colors.orange,
-                  background: HorticadeTheme.scaffoldBackground!,
-                )
-              : Scaffold(
-                  appBar: HorticadeAppBar(title: 'Product Picture'),
-                  backgroundColor: HorticadeTheme.scaffoldBackground,
-                  body: snapshot.data == null
-                      ? const Text('Camera could not be accessed')
-                      : CameraPreview(snapshot.data as CameraController),
-                  floatingActionButton: FloatingActionButton(
-                    backgroundColor: Colors.grey[700],
-                    onPressed: () async {
-                      XFile pic = await snapshot.data!.takePicture();
+    return Scaffold(
+      appBar: HorticadeAppBar(
+        title: 'Product Picture',
+        actions: cameraActions,
+      ),
+      backgroundColor: HorticadeTheme.scaffoldBackground,
+      body: camera == null ? loader() : cameraPreview,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[700],
+        onPressed: () async {
+          XFile pic;
 
-                      bool accepted = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ShowPicture(path: pic.path),
-                        ),
-                      );
+          try {
+            pic = await camera!.takePicture();
+          } on CameraException {
+            // Capture button probably tapped multiple times
+            return;
+          }
+          bool accepted = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ShowPicture(path: pic.path),
+            ),
+          );
 
-                      if (accepted) {
-                        Navigator.of(context).pop(pic.path);
-                      }
-                    },
-                    child: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.orange,
-                    ),
-                  ),
-                ),
+          if (accepted) {
+            Navigator.of(context).pop(pic.path);
+          }
+        },
+        child: const Icon(
+          Icons.camera_alt,
+          color: Colors.orange,
+        ),
+      ),
     );
   }
 }

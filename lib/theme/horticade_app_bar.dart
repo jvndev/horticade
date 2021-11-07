@@ -5,6 +5,7 @@ class HorticadeAppBar extends AppBar {
   HorticadeAppBar({
     Key? key,
     required String title,
+    List<Widget>? actions,
   }) : super(
           key: key,
           centerTitle: true,
@@ -13,5 +14,6 @@ class HorticadeAppBar extends AppBar {
           iconTheme: HorticadeTheme.appbarIconsTheme,
           actionsIconTheme: HorticadeTheme.appbarIconsTheme,
           titleTextStyle: HorticadeTheme.appbarTitleTextStyle,
+          actions: actions,
         );
 }
