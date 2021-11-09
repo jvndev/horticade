@@ -29,7 +29,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     super.initState();
 
     databaseService.findEntity(widget.order.product.ownerUid).then((entity) {
-      Location productLocation = entity!.location;
+      Location productLocation = entity.location;
       Location orderLocation = widget.order.location;
 
       locationService.distance(productLocation, orderLocation).then((distance) {

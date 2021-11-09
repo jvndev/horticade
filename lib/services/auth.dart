@@ -49,7 +49,11 @@ class AuthService {
           )
           .timeout(awaitTimeout);
       await _db.createEntity(Entity(
-          uid: userCredential.user!.uid, name: name, location: location));
+        uid: userCredential.user!.uid,
+        isAdmin: false,
+        name: name,
+        location: location,
+      ));
 
       return null;
     } on FirebaseAuthException catch (e) {

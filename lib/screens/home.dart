@@ -2,15 +2,36 @@ import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/menu/menu.dart';
 import 'package:horticade/screens/product/products_watch.dart';
+import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
+import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
-  final Entity entity;
+class Home extends StatefulWidget {
+  final AuthUser authUser;
 
-  const Home({Key? key, required this.entity}) : super(key: key);
+  const Home({Key? key, required this.authUser}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  Entity? entity;
+  final DatabaseService databaseService = DatabaseService();
+
+  @override
+  void initState() {
+    super.initState();
+
+    databaseService.findEntity(widget.authUser.uid).then((entity) {
+      setState(() {
+        this.entity = entity;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +62,16 @@ class Home extends StatelessWidget {
         backgroundColor: HorticadeTheme.appbarBackground,
         actionsIconTheme: HorticadeTheme.appbarIconsTheme,
         actions: [
-          Menu(
-            context: context,
-            authUser: _authUser,
-            entity: entity,
-          )
+          entity == null
+              ? Loader(
+                  color: Colors.orange,
+                  background: HorticadeTheme.appbarBackground!,
+                )
+              : Menu(
+                  context: context,
+                  authUser: _authUser,
+                  entity: entity!,
+                )
         ],
       ),
       body: Column(

@@ -4,7 +4,6 @@ import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/location/location_search.dart';
-import 'package:horticade/screens/order/create/delivery_address_dialog.dart';
 import 'package:horticade/screens/order/create/delivery_date_row.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
@@ -70,7 +69,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
         setState(() {
           productOwner = owner;
 
-          calculateDistance(owner!.location, entity!.location);
+          calculateDistance(owner.location, entity.location);
         });
       });
     });

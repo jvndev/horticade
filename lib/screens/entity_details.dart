@@ -27,6 +27,7 @@ class _EntityDetailsState extends State<EntityDetails> {
     Entity entity = await db.createEntity(
       Entity(
         uid: widget.entity.uid,
+        isAdmin: widget.entity.isAdmin,
         name: widget.entity.name,
         location: location,
       ),
@@ -46,6 +47,7 @@ class _EntityDetailsState extends State<EntityDetails> {
           .createEntity(
         Entity(
           uid: widget.entity.uid,
+          isAdmin: widget.entity.isAdmin,
           name: nameController.text,
           location: widget.entity.location,
         ),

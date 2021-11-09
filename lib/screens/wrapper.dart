@@ -1,5 +1,3 @@
-import 'package:horticade/models/entity.dart';
-import 'package:horticade/models/location.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/authenticate/authenticate.dart';
 import 'package:horticade/screens/home.dart';
@@ -17,7 +15,7 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  final DatabaseService db = DatabaseService();
+  final DatabaseService databaseService = DatabaseService();
   Widget home = Loader(
     color: Colors.orange,
     background: HorticadeTheme.scaffoldBackground!,
@@ -30,28 +28,7 @@ class _WrapperState extends State<Wrapper> {
     if (authUser == null) {
       return const Authenticate();
     } else {
-      db.findEntity(authUser.uid).then((entity) {
-        if (entity == null) {
-          // new user was registered
-          db
-              .createEntity(Entity(
-            uid: authUser.uid,
-            name: authUser.email,
-            location: Location(address: '', geocode: ''),
-          ))
-              .then((newEntity) {
-            setState(() {
-              home = Home(entity: newEntity!);
-            });
-          });
-        } else {
-          setState(() {
-            home = Home(entity: entity);
-          });
-        }
-      });
-
-      return home;
+      return Home(authUser: authUser);
     }
   }
 }

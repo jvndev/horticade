@@ -13,19 +13,9 @@ import 'package:horticade/shared/types.dart';
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<Entity?> findEntity(String uid) async {
-    List<Entity> ret = [];
-    QuerySnapshot<Map<String, dynamic>> qs =
-        await _firestore.collection('entities').get();
-
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> entityDocumentSnapshots =
-        qs.docs.where((QueryDocumentSnapshot qds) => qds.id == uid).toList();
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> snapshot
-        in entityDocumentSnapshots) {
-      ret.add(await EntityDao.entityFromQueryDocumentSnapshot(snapshot));
-    }
-    return ret.isEmpty ? null : ret.first;
+  Future<Entity> findEntity(String uid) async {
+    return EntityDao.entityFromDocumentSnapshot(
+        await _firestore.collection('entities').doc(uid).get());
   }
 
   Future<Category?> createCategory(Category category) async {
