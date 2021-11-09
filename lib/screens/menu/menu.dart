@@ -12,10 +12,70 @@ import 'package:horticade/services/auth.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
-class Menu extends PopupMenuButton {
+class Menu extends PopupMenuButton<String> {
   final BuildContext context;
   final AuthUser authUser;
   final Entity entity;
+
+  static List<PopupMenuItem<String>> menuItems(Entity entity) {
+    List<Map<String, dynamic>> menuItems = [
+      {
+        'text': 'Create Product',
+        'val': 'createProduct',
+        'icon': Icons.create,
+        'admin': false,
+      },
+      {
+        'text': 'Inventory',
+        'val': 'inventory',
+        'icon': Icons.inventory,
+        'admin': false,
+      },
+      {
+        'text': 'Place Order',
+        'val': 'submitOrder',
+        'icon': Icons.local_shipping,
+        'admin': false,
+      },
+      {
+        'text': 'Orders Placed',
+        'val': 'ordersSent',
+        'icon': Icons.arrow_upward_rounded,
+        'admin': false,
+      },
+      {
+        'text': 'Orders Received',
+        'val': 'ordersReceived',
+        'icon': Icons.arrow_downward_rounded,
+        'admin': false,
+      },
+      {
+        'text': 'Categories',
+        'val': 'categories',
+        'icon': Icons.category,
+        'admin': true,
+      },
+      {
+        'text': 'Settings',
+        'val': 'settings',
+        'icon': Icons.settings,
+        'admin': false,
+      },
+      {
+        'text': 'Log Out',
+        'val': 'logout',
+        'icon': Icons.person_off,
+        'admin': false,
+      },
+    ];
+
+    return menuItems
+        .where((e) => entity.isAdmin || e['admin'] == false)
+        .map((e) =>
+            MenuItem<String>(text: e['text'], val: e['val'], icon: e['icon'])
+                as PopupMenuItem<String>)
+        .toList();
+  }
 
   Menu({
     Key? key,
@@ -25,48 +85,7 @@ class Menu extends PopupMenuButton {
   }) : super(
           color: HorticadeTheme.dropdownMenuColor,
           key: key,
-          itemBuilder: (context) => [
-            MenuItem(
-              text: 'Create Product',
-              val: 'createProduct',
-              icon: Icons.create,
-            ),
-            MenuItem(
-              text: 'Inventory',
-              val: 'inventory',
-              icon: Icons.inventory,
-            ),
-            MenuItem(
-              text: 'Place Order',
-              val: 'submitOrder',
-              icon: Icons.local_shipping,
-            ),
-            MenuItem(
-              text: 'Orders Placed',
-              val: 'ordersSent',
-              icon: Icons.arrow_upward_rounded,
-            ),
-            MenuItem(
-              text: 'Orders Received',
-              val: 'ordersReceived',
-              icon: Icons.arrow_downward_rounded,
-            ),
-            MenuItem(
-              text: 'Categories',
-              val: 'categories',
-              icon: Icons.category,
-            ),
-            MenuItem(
-              text: 'Settings',
-              val: 'settings',
-              icon: Icons.settings,
-            ),
-            MenuItem(
-              text: 'Log Out',
-              val: 'logout',
-              icon: Icons.person_off,
-            ),
-          ],
+          itemBuilder: (context) => menuItems(entity),
           onSelected: (val) {
             switch (val) {
               case 'createProduct':

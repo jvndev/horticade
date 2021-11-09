@@ -1,9 +1,9 @@
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 
-class MenuItem<String> extends PopupMenuItem {
+class MenuItem<T> extends PopupMenuItem<T> {
   final dynamic text;
-  final String val;
+  final T val;
   final IconData icon;
 
   MenuItem({
