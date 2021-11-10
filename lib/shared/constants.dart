@@ -8,6 +8,12 @@ InputDecoration textFieldDecoration(String text) {
     focusedBorder: const OutlineInputBorder(
       borderSide: BorderSide(),
     ),
+    labelStyle: const TextStyle(
+      color: Colors.black,
+    ),
+    hintStyle: const TextStyle(
+      color: Colors.orange,
+    ),
   );
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
-import 'package:horticade/screens/category/categories_list_item.dart';
+import 'package:horticade/screens/category/admin/categories_list_item.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/sub_category.dart';
-import 'package:horticade/screens/category/categories_list.dart';
+import 'package:horticade/screens/category/admin/categories_list.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
@@ -39,8 +39,6 @@ class _CategoriesState extends State<Categories> {
 
   Future<void> _createCategory() async {
     if (_formKey.currentState!.validate()) {
-      String status = '';
-
       setState(() {
         _busy = true;
       });
@@ -56,21 +54,18 @@ class _CategoriesState extends State<Categories> {
 
         if (category != null) {
           _categories.add(category);
-          status = 'Category created successfully';
         } else {
-          status = 'Failed to create category';
+          showDialog(
+            context: context,
+            builder: (context) => HorticadeConfirmationDialog(
+              title: 'Category failed to create',
+              accept: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          );
         }
       });
-
-      showDialog(
-        context: context,
-        builder: (context) => HorticadeConfirmationDialog(
-          title: status,
-          accept: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      );
     }
   }
 

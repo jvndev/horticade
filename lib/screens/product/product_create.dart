@@ -6,7 +6,7 @@ import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
-import 'package:horticade/screens/category/categories_dropdown.dart';
+import 'package:horticade/screens/category/select/categories_dropdown.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';

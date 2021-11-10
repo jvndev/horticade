@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthService.userStream,
       initialData: null,
       child: const MaterialApp(
+        title: 'Horticade',
         home: Wrapper(),
       ),
     );

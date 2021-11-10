@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
-import 'package:horticade/screens/category/categories_dropdown_menu_item.dart';
+import 'package:horticade/screens/category/select/'
+    'categories_dropdown_menu_item.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/shared/types.dart';
 import 'package:horticade/theme/horticade_theme.dart';

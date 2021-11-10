@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
-import 'package:horticade/screens/category/categories_dropdown.dart';
+import 'package:horticade/screens/category/select/categories_dropdown.dart';
 import 'package:horticade/screens/order/create/order_filter.dart';
 import 'package:horticade/screens/order/create/finalize_order.dart';
 import 'package:horticade/services/database.dart';
