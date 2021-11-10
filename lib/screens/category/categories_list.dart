@@ -22,8 +22,14 @@ class CategoriesList extends StatelessWidget {
         } else {
           List<Category> categories = snapshot.data!;
 
-          return ListView.builder(
-            key: Key('categories_${categories.length}'),
+          return ListView.separated(
+            key: Key('${key}_categories_${categories.length}'),
+            separatorBuilder: (context, i) => const Padding(
+              padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+              child: Divider(
+                thickness: 2.0,
+              ),
+            ),
             itemBuilder: (context, i) =>
                 CategoriesListItem(category: categories[i]),
             itemCount: categories.length,

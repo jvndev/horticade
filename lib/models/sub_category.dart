@@ -1,14 +1,14 @@
-import 'package:horticade/models/sub_category.dart';
+import 'package:horticade/models/category.dart';
 
-class Category {
+class SubCategory {
   String? uid;
   final String name;
-  final List<SubCategory> children;
+  final Category? category; // the parent
 
-  Category({
+  SubCategory({
     this.uid,
     required this.name,
-    required this.children,
+    required this.category,
   });
 
   @override
@@ -16,7 +16,7 @@ class Category {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! Category) {
+    if (other is! SubCategory) {
       return false;
     } else {
       return other.uid != null && uid != null

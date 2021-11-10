@@ -3,10 +3,12 @@ import 'package:horticade/db/category_dao.dart';
 import 'package:horticade/db/entity_dao.dart';
 import 'package:horticade/db/order_dao.dart';
 import 'package:horticade/db/product_dao.dart';
+import 'package:horticade/db/sub_category_dao.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/types.dart';
 
@@ -18,19 +20,59 @@ class DatabaseService {
         await _firestore.collection('entities').doc(uid).get());
   }
 
-  Future<Category?> createCategory(Category category) async {
-    DocumentReference ref;
+  Future<SubCategory?> createSubCategory(
+    SubCategory subCategory,
+  ) async {
+    DocumentReference subCategoryRef;
+    DocumentReference categoryRef =
+        _firestore.collection('categories').doc(subCategory.category!.uid);
 
     try {
-      await (ref = _firestore.collection('categories').doc())
-          .set(category.toMap())
-          .timeout(awaitTimeout);
-      category.uid = ref.id;
+      await (subCategoryRef = _firestore.collection('sub_categories').doc())
+          .set({
+        'name': subCategory.name,
+        'category': categoryRef,
+      });
+    } catch (e) {
+      return null;
+    }
+
+    subCategory.uid = subCategoryRef.id;
+
+    return subCategory;
+  }
+
+  Future<Category?> createCategory(Category category) async {
+    DocumentReference categoriesRef;
+
+    try {
+      await (categoriesRef = _firestore.collection('categories').doc()).set({
+        'name': category.name,
+      }).timeout(awaitTimeout);
+      category.uid = categoriesRef.id;
     } catch (e) {
       return null;
     }
 
     return category;
+  }
+
+  Future<List<SubCategory>> findSubcategories(Category category) async {
+    List<SubCategory> ret = [];
+    DocumentReference parentRef =
+        _firestore.collection('categories').doc(category.uid);
+    QuerySnapshot<Map<String, dynamic>> subCategoriesSnapshot = await _firestore
+        .collection('sub_categories')
+        .where('category', isEqualTo: parentRef)
+        .get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> qds
+        in subCategoriesSnapshot.docs) {
+      ret.add(await SubCategoryDao.subCategoryFromQueryDocumentSnapshot(
+          category, qds));
+    }
+
+    return ret;
   }
 
   // entity uid will be the authuser's

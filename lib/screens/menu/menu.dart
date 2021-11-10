@@ -72,8 +72,7 @@ class Menu extends PopupMenuButton<String> {
     return menuItems
         .where((e) => entity.isAdmin || e['admin'] == false)
         .map((e) =>
-            MenuItem<String>(text: e['text'], val: e['val'], icon: e['icon'])
-                as PopupMenuItem<String>)
+            MenuItem<String>(text: e['text'], val: e['val'], icon: e['icon']))
         .toList();
   }
 

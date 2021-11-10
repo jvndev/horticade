@@ -1,4 +1,5 @@
 import 'package:horticade/models/category.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/screens/category/categories_list.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
@@ -46,6 +47,7 @@ class _CategoriesState extends State<Categories> {
 
       Category? category = await databaseService.createCategory(Category(
         name: nameController.text,
+        children: const <SubCategory>[],
       ));
 
       setState(() {
@@ -89,9 +91,6 @@ class _CategoriesState extends State<Categories> {
           key: _formKey,
           child: Column(
             children: [
-              const Expanded(
-                child: CategoriesList(),
-              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
                 child: Row(
@@ -101,7 +100,7 @@ class _CategoriesState extends State<Categories> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 5.0),
                         child: TextFormField(
-                          decoration: textFieldDecoration('Category Name'),
+                          decoration: textFieldDecoration('New Category Name'),
                           validator: _categoryValidator,
                           controller: nameController,
                         ),
@@ -118,13 +117,16 @@ class _CategoriesState extends State<Categories> {
                               onPressed: _createCategory,
                               style: HorticadeTheme.actionButtonTheme,
                               child: const Text(
-                                'Save',
+                                'Add',
                                 style: HorticadeTheme.actionButtonTextStyle,
                               ),
                             ),
                     ),
                   ],
                 ),
+              ),
+              const Expanded(
+                child: CategoriesList(key: Key('categories')),
               ),
             ],
           ),

@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horticade/models/category.dart';
+import 'package:horticade/models/sub_category.dart';
+import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/types.dart';
 
 class CategoryDao {
+  static final DatabaseService databaseService = DatabaseService();
+
   static Future<List<Category>> categoryFromQuerySnapshot({
     required QuerySnapshot<Map<String, dynamic>> snapshot,
     List<CategoryPredicate>? filters,
@@ -42,9 +46,13 @@ class CategoryDao {
 
   static Future<Category> _categoryFromDocumentData(
       Map<String, dynamic> data) async {
-    Category category = Category(name: data['name']);
+    Category category = Category(
+      uid: data['uid'],
+      name: data['name'],
+      children: <SubCategory>[],
+    );
 
-    category.uid = data['uid'];
+    category.children.addAll(await databaseService.findSubcategories(category));
 
     return category;
   }

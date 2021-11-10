@@ -74,4 +74,14 @@ class HorticadeTheme {
   static const confirmationDialogTitleStyle = TextStyle(
     color: Colors.orange,
   );
+
+  static final expandedListCollapsedColor = Colors.grey[700];
+  static final expandedListColor = Colors.grey[600];
+  static const expandedListTextStyle = TextStyle(
+    color: Colors.orange,
+  );
+  static const expandedListAddTextStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
 }
