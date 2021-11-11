@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
-import 'package:horticade/screens/category/select/'
-    'categories_dropdown_menu_item.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/shared/types.dart';
 import 'package:horticade/theme/horticade_theme.dart';
@@ -45,8 +43,8 @@ class _CategoriesDropdownListState extends State<CategoriesDropdownList> {
               hint: const Text('Choose a Category'),
               value: selectedCategory,
               items: categories
-                  .map<DropdownMenuItem<Category>>(
-                      (category) => CategoriesDropdownMenuItem(category))
+                  .map<DropdownMenuItem<Category>>((category) =>
+                      DropdownMenuItem(child: Text(category.name)))
                   .toList(),
               isExpanded: false,
               onChanged: (category) {

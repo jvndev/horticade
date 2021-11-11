@@ -11,3 +11,4 @@ typedef VoidCatetegoryFunc = void Function(Category?);
 typedef CategoryPredicate = bool Function(Category);
 typedef SubCategoryPredicate = bool Function(SubCategory);
 typedef VoidSubCategoryFunc = void Function(SubCategory);
+typedef VoidNullSubCategoryFunc = void Function(SubCategory?);
