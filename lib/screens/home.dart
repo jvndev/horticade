@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/menu/menu.dart';
@@ -26,11 +27,15 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    databaseService.findEntity(widget.authUser.uid).then((entity) {
-      setState(() {
-        this.entity = entity;
+    try {
+      databaseService.findEntity(widget.authUser.uid).then((entity) {
+        setState(() {
+          this.entity = entity;
+        });
       });
-    });
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'No internet connection.');
+    }
   }
 
   @override

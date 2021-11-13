@@ -1,9 +1,11 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/services.dart';
+import 'package:horticade/models/category.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
+import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
 import 'package:horticade/screens/order/create/order_filter.dart';
 import 'package:horticade/screens/order/create/finalize_order.dart';
 import 'package:horticade/services/database.dart';
@@ -37,6 +39,7 @@ class _ProductOrderListState extends State<ProductOrderList> {
       CurrencyTextInputFormatter(symbol: 'R');
   CurrencyTextInputFormatter toTextInputFormatter =
       CurrencyTextInputFormatter(symbol: 'R');
+  Category? selectedCategory;
 
   Future<Order?> _confirmOrder(Product product) async =>
       await Navigator.of(context).push(
@@ -97,8 +100,19 @@ class _ProductOrderListState extends State<ProductOrderList> {
             Expanded(
               flex: 1,
               child: CategoriesDropdown(
-                  onSelect: (category) => widget.filter.category = category),
+                onSelect: (category) => selectedCategory = category,
+              ),
             ),
+            selectedCategory != null
+                ? Expanded(
+                    flex: 1,
+                    child: SubCategoriesDropdown(
+                      category: selectedCategory!,
+                      onSelect: (subCategory) =>
+                          widget.filter.subCategory = subCategory,
+                    ),
+                  )
+                : const SizedBox(),
             Expanded(
               flex: 1,
               child: TypeAheadField<String>(

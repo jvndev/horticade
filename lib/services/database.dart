@@ -17,7 +17,8 @@ class DatabaseService {
 
   Future<Entity> findEntity(String uid) async {
     return EntityDao.entityFromDocumentSnapshot(
-        await _firestore.collection('entities').doc(uid).get());
+            await _firestore.collection('entities').doc(uid).get())
+        .timeout(awaitTimeout);
   }
 
   Future<SubCategory?> createSubCategory(
@@ -68,8 +69,11 @@ class DatabaseService {
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> qds
         in subCategoriesSnapshot.docs) {
-      ret.add(await SubCategoryDao.subCategoryFromQueryDocumentSnapshot(
-          category, qds));
+      ret.add(
+        await SubCategoryDao.subCategoryFromQueryDocumentSnapshot(
+          qds,
+        ),
+      );
     }
 
     return ret;
@@ -94,8 +98,8 @@ class DatabaseService {
   ///
   Future<Product?> createProduct(Product product) async {
     try {
-      DocumentReference categoryRef =
-          _firestore.collection('categories').doc(product.category.uid);
+      DocumentReference subCategoryRef =
+          _firestore.collection('sub_categories').doc(product.subCategory.uid);
       DocumentReference productRef =
           _firestore.collection('products').doc(product.uid);
 
@@ -105,7 +109,7 @@ class DatabaseService {
         'cost': product.cost,
         'image_filename': product.imageFilename,
         'qty': product.qty,
-        'category': categoryRef,
+        'sub_category': subCategoryRef,
       }).timeout(awaitTimeout);
 
       product.uid = productRef.id;
@@ -171,6 +175,15 @@ class DatabaseService {
           {List<CategoryPredicate>? filters}) =>
       _firestore.collection('categories').snapshots().map(
             (snapshot) => CategoryDao.categoryFromQuerySnapshot(
+              snapshot: snapshot,
+              filters: filters,
+            ),
+          );
+
+  static Stream<Future<List<SubCategory>>> subCategoryStream(
+          {List<SubCategoryPredicate>? filters}) =>
+      _firestore.collection('sub_categories').snapshots().map(
+            (snapshot) => SubCategoryDao.subCategoryFromQuerySnapshot(
               snapshot: snapshot,
               filters: filters,
             ),

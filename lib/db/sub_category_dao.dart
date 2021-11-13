@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:horticade/db/category_dao.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/services/database.dart';
@@ -8,14 +9,13 @@ class SubCategoryDao {
   static final DatabaseService databaseService = DatabaseService();
 
   static Future<List<SubCategory>> subCategoryFromQuerySnapshot({
-    required Category category,
     required QuerySnapshot<Map<String, dynamic>> snapshot,
     List<SubCategoryPredicate>? filters,
   }) async {
     List<SubCategory> orders = [];
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> qds in snapshot.docs) {
-      orders.add(await subCategoryFromQueryDocumentSnapshot(category, qds));
+      orders.add(await subCategoryFromQueryDocumentSnapshot(qds));
     }
 
     if (filters != null) {
@@ -28,34 +28,36 @@ class SubCategoryDao {
   }
 
   static Future<SubCategory> subCategoryFromDocumentSnapshot(
-    Category category,
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   ) async {
     Map<String, dynamic> data = snapshot.data()!;
 
     data['uid'] = snapshot.id;
 
-    return await _subCategoryFromDocumentData(category, data);
+    return await _subCategoryFromDocumentData(data);
   }
 
   static Future<SubCategory> subCategoryFromQueryDocumentSnapshot(
-      Category category,
-      QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
+    QueryDocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) async {
     Map<String, dynamic> data = snapshot.data();
 
     data['uid'] = snapshot.id;
 
-    return await _subCategoryFromDocumentData(category, data);
+    return await _subCategoryFromDocumentData(data);
   }
 
   static Future<SubCategory> _subCategoryFromDocumentData(
-      Category category, Map<String, dynamic> data) async {
-    SubCategory subCategory = SubCategory(
+    Map<String, dynamic> data,
+  ) async {
+    DocumentReference<Map<String, dynamic>> categoryRef = data['category'];
+    Category category =
+        await CategoryDao.categoryFromDocumentSnapshot(await categoryRef.get());
+
+    return SubCategory(
       uid: data['uid'],
       name: data['name'],
       category: category,
     );
-
-    return subCategory;
   }
 }

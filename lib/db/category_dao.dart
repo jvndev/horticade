@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horticade/models/category.dart';
-import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/types.dart';
 
@@ -49,10 +48,7 @@ class CategoryDao {
     Category category = Category(
       uid: data['uid'],
       name: data['name'],
-      children: <SubCategory>[],
     );
-
-    category.children.addAll(await databaseService.findSubcategories(category));
 
     return category;
   }

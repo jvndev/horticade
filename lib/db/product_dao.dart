@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:horticade/db/category_dao.dart';
+import 'package:horticade/db/sub_category_dao.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/shared/types.dart';
 
@@ -44,20 +44,22 @@ class ProductDao {
 
   static Future<Product> _productFromDocumentData(
       {required Map<String, dynamic> data}) async {
-    DocumentReference<Map<String, dynamic>> categoryRef = data['category'];
-    DocumentSnapshot<Map<String, dynamic>> categorySnapshot =
-        await categoryRef.get();
+    DocumentReference<Map<String, dynamic>> subCategoryRef =
+        data['sub_category'];
+    DocumentSnapshot<Map<String, dynamic>> subCategorySnapshot =
+        await subCategoryRef.get();
 
     Product product = Product(
+      uid: data['uid'],
       ownerUid: data['owner_uid'],
       name: data['name'],
       cost: data['cost'],
-      category:
-          await CategoryDao.categoryFromDocumentSnapshot(categorySnapshot),
+      subCategory: await SubCategoryDao.subCategoryFromDocumentSnapshot(
+        subCategorySnapshot,
+      ),
       imageFilename: data['image_filename'],
       qty: data['qty'],
     );
-    product.uid = data['uid'];
 
     return product;
   }

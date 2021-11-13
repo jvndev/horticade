@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/sub_category.dart';
-import 'package:horticade/screens/category/admin/subcategory_list_item.dart';
+import 'package:horticade/screens/category/admin/sub_categories.dart';
 import 'package:horticade/services/database.dart';
-import 'package:horticade/theme/horticade_confirmation_dialog.dart';
-import 'package:horticade/theme/horticade_theme.dart';
+import 'package:horticade/shared/types.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesListItem extends StatefulWidget {
   final Category category;
@@ -18,99 +18,27 @@ class CategoriesListItem extends StatefulWidget {
 
 class _CategoriesListItemState extends State<CategoriesListItem> {
   final DatabaseService databaseService = DatabaseService();
-  List<Widget> subCategories = [];
-  ListTile? subCategoryAdd;
-
-  Future<void> addSubCategory(SubCategory subCategory) async {
-    SubCategory? retSubCategory =
-        await databaseService.createSubCategory(subCategory);
-
-    if (retSubCategory != null) {
-      widget.category.children.add(retSubCategory);
-
-      setState(() {
-        populateSubCategories();
-      });
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => HorticadeConfirmationDialog(
-          title: 'Failed to add subcategory',
-          accept: () {},
-        ),
-      );
-    }
-  }
-
-  void populateSubCategories() {
-    setState(() {
-      subCategories = widget.category.children
-          .map((e) => ListTile(
-                title: Text(
-                  e.name,
-                  style: HorticadeTheme.cardTitleTextStyle,
-                ),
-              ))
-          .toList();
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-
-    populateSubCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      collapsedBackgroundColor: HorticadeTheme.expandedListCollapsedColor,
-      backgroundColor: HorticadeTheme.expandedListColor,
-      collapsedIconColor: HorticadeTheme.expandedListColor,
-      iconColor: HorticadeTheme.expandedListCollapsedColor,
-      initiallyExpanded: false,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.category.name,
-            style: HorticadeTheme.expandedListTextStyle,
+    return Column(
+      children: [
+        StreamProvider<Future<List<SubCategory>>>.value(
+          value: DatabaseService.subCategoryStream(
+            filters: <SubCategoryPredicate>[
+              (e) => e.category == widget.category,
+            ],
           ),
-          TextButton.icon(
-            onPressed: () {
-              setState(() {
-                if (subCategoryAdd == null) {
-                  subCategoryAdd = SubCategoryListItem(
-                    category: widget.category,
-                    onAdd: (subCategory) {
-                      addSubCategory(subCategory);
-                      if (mounted) {
-                        setState(() {
-                          subCategories.remove(subCategoryAdd);
-                          subCategoryAdd = null;
-                        });
-                      }
-                    },
-                  ).build(context) as ListTile;
-
-                  subCategories.add(subCategoryAdd!);
-                }
-              });
-            },
-            label: const Text(
-              'Add Subcategory',
-              style: HorticadeTheme.expandedListAddTextStyle,
-            ),
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-      childrenPadding: const EdgeInsets.fromLTRB(2.5, 2.5, 2.5, 2.5),
-      children: subCategories,
+          initialData: Future(() => const <SubCategory>[]),
+          builder: (context, widget) =>
+              SubCategories(category: this.widget.category),
+        ),
+      ],
     );
   }
 }

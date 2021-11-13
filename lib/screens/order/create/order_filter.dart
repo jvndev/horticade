@@ -1,4 +1,4 @@
-import 'package:horticade/models/category.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/shared/types.dart';
@@ -12,7 +12,7 @@ class OrderFilter with ChangeNotifier {
     _filters['notOwned'] =
         (Product product) => product.ownerUid != authUser.uid;
     _filters['name'] = (Product product) => true;
-    _filters['category'] = (Product product) => true;
+    _filters['subCategory'] = (Product product) => true;
     _filters['fromPrice'] = (Product product) => true;
     _filters['toPrice'] = (Product product) => true;
   }
@@ -25,9 +25,10 @@ class OrderFilter with ChangeNotifier {
     notifyListeners();
   }
 
-  set category(Category? category) {
-    _filters['category'] = (Product product) =>
-        category == null ? true : product.category.name == category.name;
+  set subCategory(SubCategory? subCategory) {
+    _filters['subCategory'] = (Product product) => subCategory == null
+        ? true
+        : product.subCategory.name == subCategory.name;
 
     notifyListeners();
   }

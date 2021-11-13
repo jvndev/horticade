@@ -4,6 +4,7 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:flutter/services.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
@@ -48,10 +49,11 @@ class _ProductCreateState extends State<ProductCreate> {
   final CurrencyTextInputFormatter currencyTextInputFormatter =
       CurrencyTextInputFormatter(symbol: 'R');
 
-  bool _loading = false;
+  bool _saving = false;
   String _status = '';
   String? _imagePath;
   Category? _selectedCategory;
+  SubCategory? _selectedSubCategory;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController costController = TextEditingController();
@@ -79,9 +81,9 @@ class _ProductCreateState extends State<ProductCreate> {
       return;
     }
 
-    if (_selectedCategory == null) {
+    if (_selectedSubCategory == null) {
       setState(() {
-        _status = 'No category selected.';
+        _status = 'A product subcategory is required.';
       });
 
       return;
@@ -94,13 +96,13 @@ class _ProductCreateState extends State<ProductCreate> {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _status = '';
-        _loading = true;
+        _saving = true;
       });
 
       String? imageFilename = await _imageService.storeImage(
         uid: authUser.uid,
         localPath: _imagePath as String,
-        category: _selectedCategory as Category,
+        subCategory: _selectedSubCategory!,
       );
 
       Product? product;
@@ -113,14 +115,14 @@ class _ProductCreateState extends State<ProductCreate> {
           ownerUid: authUser.uid,
           name: nameController.text,
           cost: currencyTextInputFormatter.getUnformattedValue().toDouble(),
-          category: _selectedCategory as Category,
+          subCategory: _selectedSubCategory!,
           imageFilename: imageFilename,
           qty: int.parse(qtyController.text),
         ));
       }
 
       setState(() {
-        _loading = false;
+        _saving = false;
       });
 
       if (product == null) {
@@ -198,6 +200,22 @@ class _ProductCreateState extends State<ProductCreate> {
                             ),
                           ],
                         ),
+                        /*
+                        _selectedCategory != null
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: SubCategoriesDropdown(
+                                      category: _selectedCategory!,
+                                      onSelect: (subCategory) {
+                                        _selectedSubCategory = subCategory;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
+                            */
                         Row(
                           children: [
                             Expanded(
@@ -248,7 +266,7 @@ class _ProductCreateState extends State<ProductCreate> {
                           ],
                         ),
                         formButtonSpacer,
-                        _loading
+                        _saving
                             ? Loader(
                                 color: Colors.orange,
                                 background: HorticadeTheme.scaffoldBackground!,

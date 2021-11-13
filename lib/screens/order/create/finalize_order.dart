@@ -51,7 +51,7 @@ class _FinalizeOrderState extends State<FinalizeOrder> {
 
     imageService
         .retrieveImage(
-      category: widget.product.category.name,
+      subCategory: widget.product.subCategory.name,
       imageFilename: widget.product.imageFilename,
     )
         .then((image) {

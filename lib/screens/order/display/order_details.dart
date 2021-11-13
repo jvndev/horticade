@@ -52,7 +52,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           formTextSpacer,
           HorticadeOrderLine(
             heading: 'Category',
-            details: widget.order.product.category.name,
+            details: widget.order.product.subCategory.name,
           ),
           HorticadeOrderLine(
             heading: 'Product',

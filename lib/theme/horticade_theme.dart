@@ -75,12 +75,12 @@ class HorticadeTheme {
     color: Colors.orange,
   );
 
-  static final expandedListCollapsedColor = Colors.grey[700];
-  static final expandedListColor = Colors.grey[600];
-  static const expandedListTextStyle = TextStyle(
+  static final expansionPanelHeaderColor = Colors.grey[700];
+  static const expansionPanelTextStyle = TextStyle(
+    fontWeight: FontWeight.bold,
     color: Colors.orange,
   );
-  static const expandedListAddTextStyle = TextStyle(
+  static const expansionAddTextStyle = TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );

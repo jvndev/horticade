@@ -27,7 +27,7 @@ class _OrderCardState extends State<OrderCard> {
 
     _images
         .retrieveImage(
-            category: widget.order.product.category.name,
+            subCategory: widget.order.product.subCategory.name,
             imageFilename: widget.order.product.imageFilename)
         .then((image) {
       if (mounted) {

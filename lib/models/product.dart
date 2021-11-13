@@ -1,19 +1,20 @@
-import 'package:horticade/models/category.dart';
+import 'package:horticade/models/sub_category.dart';
 
 class Product implements Comparable<Product> {
   String? uid;
   final String ownerUid;
   final String name;
   final double cost;
-  final Category category;
+  final SubCategory subCategory;
   final String imageFilename;
   int qty;
 
   Product({
+    this.uid,
     required this.ownerUid,
     required this.name,
     required this.cost,
-    required this.category,
+    required this.subCategory,
     required this.imageFilename,
     required this.qty,
   });

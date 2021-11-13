@@ -27,7 +27,7 @@ class _ProductCardState extends State<ProductCard> {
 
     _images
         .retrieveImage(
-            category: widget.product.category.name,
+            subCategory: widget.product.subCategory.name,
             imageFilename: widget.product.imageFilename)
         .then((image) {
       if (mounted) {
@@ -50,7 +50,7 @@ class _ProductCardState extends State<ProductCard> {
           style: HorticadeTheme.cardTitleTextStyle,
         ),
         subtitle: Text(
-          widget.product.category.name,
+          widget.product.subCategory.name,
           style: HorticadeTheme.cardSubTitleTextStyle,
         ),
         leading: _image ??

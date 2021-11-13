@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:horticade/models/category.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
@@ -26,14 +26,14 @@ class ImageService {
 
   Future<String?> storeImage({
     required String uid, // AuthUser uid
-    required Category category,
+    required SubCategory subCategory,
     required String localPath, // camera path
   }) async {
     String filename = remoteImageFilename(uid); // remote image name with ext
 
     try {
       await _storage
-          .ref(category.name)
+          .ref(subCategory.name)
           .child(filename)
           .putFile(File(localPath))
           .timeout(awaitTimeout);
@@ -74,23 +74,23 @@ class ImageService {
   }
 
   Future<Image?> retrieveImage({
-    required String category,
+    required String subCategory,
     required String imageFilename,
   }) async {
     try {
       Uint8List? imageData;
 
-      imageData = await _retrieveImageLocal(category, imageFilename);
+      imageData = await _retrieveImageLocal(subCategory, imageFilename);
 
       if (imageData == null) {
         imageData = await _storage
-            .ref(category)
+            .ref(subCategory)
             .child(imageFilename)
             .getData()
             .timeout(awaitTimeout);
 
         if (imageData != null) {
-          _storeImageLocal(imageData, category, imageFilename);
+          _storeImageLocal(imageData, subCategory, imageFilename);
         }
       }
 

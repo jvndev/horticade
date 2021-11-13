@@ -1,14 +1,10 @@
-import 'package:horticade/models/sub_category.dart';
-
 class Category {
   String? uid;
   final String name;
-  final List<SubCategory> children;
 
   Category({
     this.uid,
     required this.name,
-    required this.children,
   });
 
   @override

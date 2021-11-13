@@ -1,5 +1,4 @@
 import 'package:horticade/models/category.dart';
-import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/screens/category/admin/categories_list.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/constants.dart';
@@ -45,7 +44,6 @@ class _CategoriesState extends State<Categories> {
 
       Category? category = await databaseService.createCategory(Category(
         name: nameController.text,
-        children: const <SubCategory>[],
       ));
 
       setState(() {
