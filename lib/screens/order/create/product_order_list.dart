@@ -100,7 +100,12 @@ class _ProductOrderListState extends State<ProductOrderList> {
             Expanded(
               flex: 1,
               child: CategoriesDropdown(
-                onSelect: (category) => selectedCategory = category,
+                onSelect: (category) {
+                  setState(() {
+                    selectedCategory = category;
+                  });
+                  widget.filter.category = category;
+                },
               ),
             ),
             selectedCategory != null
