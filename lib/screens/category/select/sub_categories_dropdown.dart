@@ -19,7 +19,9 @@ class SubCategoriesDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<Future<List<SubCategory>>>.value(
-      value: DatabaseService.subCategoryStream(),
+      value: DatabaseService.subCategoryStream(filters: <SubCategoryPredicate>[
+        (e) => e.category == category,
+      ]),
       initialData: Future(() => const <SubCategory>[]),
       builder: (context, widget) =>
           SubCategoriesDropdownList(onSelect: onSelect),

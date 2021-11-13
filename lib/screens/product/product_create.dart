@@ -8,6 +8,7 @@ import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
+import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';
@@ -195,12 +196,13 @@ class _ProductCreateState extends State<ProductCreate> {
                           children: [
                             Expanded(
                               child: CategoriesDropdown(onSelect: (category) {
-                                _selectedCategory = category;
+                                setState(() {
+                                  _selectedCategory = category;
+                                });
                               }),
                             ),
                           ],
                         ),
-                        /*
                         _selectedCategory != null
                             ? Row(
                                 children: [
@@ -215,7 +217,6 @@ class _ProductCreateState extends State<ProductCreate> {
                                 ],
                               )
                             : const SizedBox(),
-                            */
                         Row(
                           children: [
                             Expanded(

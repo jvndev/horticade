@@ -43,8 +43,10 @@ class _CategoriesDropdownListState extends State<CategoriesDropdownList> {
               hint: const Text('Choose a Category'),
               value: selectedCategory,
               items: categories
-                  .map<DropdownMenuItem<Category>>((category) =>
-                      DropdownMenuItem(child: Text(category.name)))
+                  .map<DropdownMenuItem<Category>>((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.name),
+                      ))
                   .toList(),
               isExpanded: false,
               onChanged: (category) {

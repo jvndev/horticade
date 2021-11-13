@@ -44,8 +44,10 @@ class _SubCategoriesDropdownListState extends State<SubCategoriesDropdownList> {
               hint: const Text('Choose a Subcategory'),
               value: selectedSubCategory,
               items: subCategories
-                  .map<DropdownMenuItem<SubCategory>>((subCategory) =>
-                      DropdownMenuItem(child: Text(subCategory.name)))
+                  .map<DropdownMenuItem<SubCategory>>((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.name),
+                      ))
                   .toList(),
               isExpanded: false,
               onChanged: (subCategory) {
