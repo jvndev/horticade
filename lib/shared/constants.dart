@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:horticade/theme/horticade_theme.dart';
 import 'package:intl/intl.dart';
 
 InputDecoration textFieldDecoration(String text) {
@@ -24,6 +26,14 @@ String remoteImageFilename(String uid) {
       "${dt.year}${dt.month}${dt.day}${dt.hour}${dt.second}${dt.millisecond}";
 
   return "${uid}_$dtStr.jpg";
+}
+
+void toast(String msg) {
+  Fluttertoast.showToast(
+    msg: msg,
+    textColor: HorticadeTheme.toastColor,
+    backgroundColor: HorticadeTheme.toastBackgroundColor,
+  );
 }
 
 String dt(DateTime dateTime) {

@@ -1,4 +1,3 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/menu/menu.dart';
@@ -20,8 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Entity? entity;
   final DatabaseService databaseService = DatabaseService();
+  Entity? entity;
 
   @override
   void initState() {
@@ -34,7 +33,7 @@ class _HomeState extends State<Home> {
         });
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: 'No internet connection.');
+      toast('No internet connection.');
     }
   }
 

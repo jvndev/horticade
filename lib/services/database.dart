@@ -3,11 +3,13 @@ import 'package:horticade/db/category_dao.dart';
 import 'package:horticade/db/entity_dao.dart';
 import 'package:horticade/db/order_dao.dart';
 import 'package:horticade/db/product_dao.dart';
+import 'package:horticade/db/spec_dao.dart';
 import 'package:horticade/db/sub_category_dao.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/entity.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/spec.dart';
 import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/types.dart';
@@ -19,6 +21,34 @@ class DatabaseService {
     return EntityDao.entityFromDocumentSnapshot(
             await _firestore.collection('entities').doc(uid).get())
         .timeout(awaitTimeout);
+  }
+
+  Future<Spec?> createSpec(Spec spec) async {
+    try {
+      DocumentReference subCategoryRef =
+          _firestore.collection('sub_categories').doc(spec.subCategory.uid);
+
+      DocumentReference specRef = await _firestore.collection('specs').add({
+        'name': spec.name,
+        'value': spec.value,
+        'sub_category': subCategoryRef,
+      }).timeout(awaitTimeout);
+      spec.uid = specRef.id;
+
+      return spec;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<bool> deleteSpec(Spec spec) async {
+    try {
+      await _firestore.collection('specs').doc(spec.uid).delete();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<SubCategory?> createSubCategory(
@@ -184,6 +214,15 @@ class DatabaseService {
           {List<SubCategoryPredicate>? filters}) =>
       _firestore.collection('sub_categories').snapshots().map(
             (snapshot) => SubCategoryDao.subCategoryFromQuerySnapshot(
+              snapshot: snapshot,
+              filters: filters,
+            ),
+          );
+
+  static Stream<Future<List<Spec>>> specStream(
+          {List<SpecPredicate>? filters}) =>
+      _firestore.collection('specs').snapshots().map(
+            (snapshot) => SpecDao.specFromQuerySnapshot(
               snapshot: snapshot,
               filters: filters,
             ),

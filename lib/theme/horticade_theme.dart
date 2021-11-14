@@ -58,12 +58,22 @@ class HorticadeTheme {
     fontSize: 14,
   );
   static final lookAheadTileColor = Colors.grey[700];
-  static final bottomSheetDecoration = BoxDecoration(color: Colors.grey[700]);
+  static final bottomSheetDecoration = BoxDecoration(
+    color: Colors.grey[700],
+  );
+  static const bottomSheetShape = Border(
+    top: BorderSide(
+      color: Colors.orange,
+    ),
+  );
   static const bottomSheetIconColor = Colors.orange;
   static const bottomSheetTextStyle = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
     fontSize: 16.0,
+  );
+  static final bottomSheetActionButtonTheme = ElevatedButton.styleFrom(
+    primary: Colors.grey[500],
   );
   static const noData = TextStyle(
     fontWeight: FontWeight.bold,
@@ -84,4 +94,6 @@ class HorticadeTheme {
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
+  static const toastColor = Colors.white;
+  static final toastBackgroundColor = Colors.grey[700];
 }

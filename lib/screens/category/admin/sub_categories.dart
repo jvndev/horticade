@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/screens/category/admin/new_sub_Category_item.dart';
+import 'package:horticade/screens/category/admin/specs_bottom_sheet.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_confirmation_dialog.dart';
@@ -88,7 +89,27 @@ class _SubCategoriesState extends State<SubCategories> {
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: subCategories.map((e) => Text(e.name)).toList(),
+            children: subCategories
+                .map((e) => ListTile(
+                      title: Text(e.name),
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.add_link,
+                          color: Colors.orange,
+                        ),
+                        onPressed: () {
+                          showBottomSheet(
+                            context: context,
+                            builder: (context) => Wrap(
+                              children: [
+                                SpecsBottomSheet(subCategory: e),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                .toList(),
           ),
           isExpanded: isExpanded,
           canTapOnHeader: true,

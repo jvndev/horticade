@@ -78,6 +78,7 @@ class InventoryBottomSheet extends StatelessWidget {
         BottomSheet(
           enableDrag: false,
           onClosing: () {},
+          shape: HorticadeTheme.bottomSheetShape,
           builder: (context) => Container(
             decoration: HorticadeTheme.bottomSheetDecoration,
             child: Row(
