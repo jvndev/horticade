@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:horticade/db/sub_category_dao.dart';
 import 'package:horticade/models/spec.dart';
-import 'package:horticade/models/spec.dart';
 import 'package:horticade/shared/types.dart';
 
 class SpecDao {

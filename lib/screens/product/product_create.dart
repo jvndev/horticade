@@ -4,11 +4,13 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:flutter/services.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/spec.dart';
 import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
 import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
+import 'package:horticade/screens/product/product_create_specs.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';
@@ -55,6 +57,7 @@ class _ProductCreateState extends State<ProductCreate> {
   String? _imagePath;
   Category? _selectedCategory;
   SubCategory? _selectedSubCategory;
+  List<Spec> _selectedSpecs = [];
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController costController = TextEditingController();
@@ -119,6 +122,7 @@ class _ProductCreateState extends State<ProductCreate> {
           subCategory: _selectedSubCategory!,
           imageFilename: imageFilename,
           qty: int.parse(qtyController.text),
+          specs: _selectedSpecs,
         ));
       }
 
@@ -146,6 +150,8 @@ class _ProductCreateState extends State<ProductCreate> {
             qtyController.text = '';
 
             _imagePath = null;
+
+            _selectedSpecs = [];
           });
         } else {
           Navigator.of(context).pop();
@@ -207,13 +213,50 @@ class _ProductCreateState extends State<ProductCreate> {
                             ? Row(
                                 children: [
                                   Expanded(
+                                    flex: 7,
                                     child: SubCategoriesDropdown(
                                       category: _selectedCategory!,
                                       onSelect: (subCategory) {
-                                        _selectedSubCategory = subCategory;
+                                        setState(() {
+                                          _selectedSubCategory = subCategory;
+                                          _selectedSpecs = <Spec>[];
+                                        });
                                       },
                                     ),
                                   ),
+                                  _selectedSubCategory != null
+                                      ? Expanded(
+                                          flex: 5,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () async {
+                                              _selectedSpecs =
+                                                  await showDialog<List<Spec>>(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return ProductCreateSpecs(
+                                                            selectedSpecs:
+                                                                _selectedSpecs,
+                                                            subCategory:
+                                                                _selectedSubCategory!,
+                                                          );
+                                                        },
+                                                      ) ??
+                                                      _selectedSpecs;
+                                            },
+                                            icon: const Icon(
+                                              Icons.link,
+                                              color: Colors.orange,
+                                            ),
+                                            label: const Text(
+                                              'Add Specs',
+                                              style: HorticadeTheme
+                                                  .actionButtonTextStyle,
+                                            ),
+                                            style: HorticadeTheme
+                                                .actionButtonTheme,
+                                          ),
+                                        )
+                                      : const SizedBox(),
                                 ],
                               )
                             : const SizedBox(),

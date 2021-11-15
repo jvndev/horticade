@@ -140,6 +140,9 @@ class DatabaseService {
         'image_filename': product.imageFilename,
         'qty': product.qty,
         'sub_category': subCategoryRef,
+        'specs': product.specs
+            .map((e) => _firestore.collection('specs').doc(e.uid))
+            .toList(),
       }).timeout(awaitTimeout);
 
       product.uid = productRef.id;

@@ -1,3 +1,4 @@
+import 'package:horticade/models/spec.dart';
 import 'package:horticade/models/sub_category.dart';
 
 class Product implements Comparable<Product> {
@@ -8,6 +9,7 @@ class Product implements Comparable<Product> {
   final SubCategory subCategory;
   final String imageFilename;
   int qty;
+  final List<Spec> specs;
 
   Product({
     this.uid,
@@ -17,6 +19,7 @@ class Product implements Comparable<Product> {
     required this.subCategory,
     required this.imageFilename,
     required this.qty,
+    required this.specs,
   });
 
   @override

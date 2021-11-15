@@ -14,3 +14,4 @@ typedef SubCategoryPredicate = bool Function(SubCategory);
 typedef VoidSubCategoryFunc = void Function(SubCategory);
 typedef VoidNullSubCategoryFunc = void Function(SubCategory?);
 typedef SpecPredicate = bool Function(Spec);
+typedef VoidSpecListFunc = void Function(List<Spec>);

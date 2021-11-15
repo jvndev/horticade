@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:horticade/db/spec_dao.dart';
 import 'package:horticade/db/sub_category_dao.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/spec.dart';
 import 'package:horticade/shared/types.dart';
 
 class ProductDao {
@@ -48,6 +50,11 @@ class ProductDao {
         data['sub_category'];
     DocumentSnapshot<Map<String, dynamic>> subCategorySnapshot =
         await subCategoryRef.get();
+    List<Spec> specs = [];
+
+    for (DocumentReference<Map<String, dynamic>> specRef in data['specs']) {
+      specs.add(await SpecDao.specFromDocumentSnapshot(await specRef.get()));
+    }
 
     Product product = Product(
       uid: data['uid'],
@@ -59,6 +66,7 @@ class ProductDao {
       ),
       imageFilename: data['image_filename'],
       qty: data['qty'],
+      specs: specs,
     );
 
     return product;
