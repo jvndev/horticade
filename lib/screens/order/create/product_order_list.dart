@@ -1,20 +1,15 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:flutter/services.dart';
-import 'package:horticade/models/category.dart';
 import 'package:horticade/models/order.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
-import 'package:horticade/screens/category/select/categories_dropdown.dart';
-import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
-import 'package:horticade/screens/order/create/order_filter.dart';
+import 'package:horticade/screens/order/filter/order_filter.dart';
 import 'package:horticade/screens/order/create/finalize_order.dart';
+import 'package:horticade/screens/order/filter/order_filter_bottom_sheet.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/theme/horticade_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:horticade/screens/product/product_card.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 
 class ProductOrderList extends StatefulWidget {
@@ -33,13 +28,6 @@ class ProductOrderList extends StatefulWidget {
 
 class _ProductOrderListState extends State<ProductOrderList> {
   final DatabaseService databaseService = DatabaseService();
-  final TextEditingController productNameController = TextEditingController();
-  final GlobalKey<FormState> priceFormKey = GlobalKey<FormState>();
-  CurrencyTextInputFormatter fromTextInputFormatter =
-      CurrencyTextInputFormatter(symbol: 'R');
-  CurrencyTextInputFormatter toTextInputFormatter =
-      CurrencyTextInputFormatter(symbol: 'R');
-  Category? selectedCategory;
 
   Future<Order?> _confirmOrder(Product product) async =>
       await Navigator.of(context).push(
@@ -50,36 +38,6 @@ class _ProductOrderListState extends State<ProductOrderList> {
           ),
         ),
       );
-
-  void fromPriceFilterChanged(OrderFilter filter) {
-    filter.fromPrice = fromTextInputFormatter.getUnformattedValue().toDouble();
-  }
-
-  void toPriceFilterChanged(OrderFilter filter) {
-    filter.toPrice = toTextInputFormatter.getUnformattedValue().toDouble();
-  }
-
-  Future<List<String>> lookAheadProductNames(String search) async {
-    List<Product> products =
-        await Provider.of<Future<List<Product>>>(context, listen: false);
-    List<String> productNames =
-        products.map((product) => product.name).toList();
-
-    return search.isEmpty
-        ? productNames
-        : productNames
-            .where((name) => name.toLowerCase().contains(search.toLowerCase()))
-            .toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    productNameController.addListener(() {
-      widget.filter.name = productNameController.text;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,118 +53,50 @@ class _ProductOrderListState extends State<ProductOrderList> {
           products = snapshot.data!;
         }
 
-        return Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: CategoriesDropdown(
-                onSelect: (category) {
-                  setState(() {
-                    selectedCategory = category;
-                  });
-                  widget.filter.category = category;
+        return Center(
+          child: Column(
+            children: [
+              ElevatedButton(
+                style: HorticadeTheme.actionButtonTheme,
+                onPressed: () {
+                  showBottomSheet(
+                    context: context,
+                    builder: (context) => OrderFilterBottomSheet(
+                      filter: widget.filter,
+                    ),
+                  );
                 },
-              ),
-            ),
-            selectedCategory != null
-                ? Expanded(
-                    flex: 1,
-                    child: SubCategoriesDropdown(
-                      category: selectedCategory!,
-                      onSelect: (subCategory) =>
-                          widget.filter.subCategory = subCategory,
-                    ),
-                  )
-                : const SizedBox(),
-            Expanded(
-              flex: 1,
-              child: TypeAheadField<String>(
-                loadingBuilder: (context) => Loader(
-                  color: Colors.orange,
-                  background: HorticadeTheme.lookAheadTileColor!,
-                ),
-                suggestionsCallback: lookAheadProductNames,
-                itemBuilder: (context, productName) => ListTile(
-                  tileColor: HorticadeTheme.lookAheadTileColor,
-                  title: Text(
-                    productName,
-                    style: HorticadeTheme.lookAheadDropdownTextStyle,
-                  ),
-                ),
-                onSuggestionSelected: (String name) {
-                  widget.filter.name = name;
-                  productNameController.text = name;
-                },
-                textFieldConfiguration: TextFieldConfiguration(
-                  decoration: textFieldDecoration('Filter by Product Name'),
-                  controller: productNameController,
-                ),
-                noItemsFoundBuilder: (context) => const Text(
-                  'No Matching Products',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                child: const Text(
+                  'Filter',
+                  style: HorticadeTheme.actionButtonTextStyle,
                 ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Form(
-                key: priceFormKey,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        inputFormatters: <TextInputFormatter>[
-                          fromTextInputFormatter,
-                        ],
-                        keyboardType: TextInputType.number,
-                        decoration: textFieldDecoration('Price From'),
-                        onChanged: (val) =>
-                            fromPriceFilterChanged(widget.filter),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        inputFormatters: <TextInputFormatter>[
-                          toTextInputFormatter,
-                        ],
-                        keyboardType: TextInputType.number,
-                        decoration: textFieldDecoration('Price To'),
-                        onChanged: (val) => toPriceFilterChanged(widget.filter),
-                      ),
-                    ),
-                  ],
-                ),
+              Expanded(
+                flex: 11,
+                child: products == null
+                    ? Loader(
+                        color: Colors.orange,
+                        background: HorticadeTheme.scaffoldBackground!,
+                      )
+                    : (products.isEmpty
+                        ? const Text(
+                            'No Products Found',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          )
+                        : ListView.builder(
+                            key: Key('product_order_list_${products.length}'),
+                            itemCount: products.length,
+                            itemBuilder: (context, i) => ProductCard(
+                              product: products![i],
+                              onTap: () => _confirmOrder(products![i]),
+                            ),
+                          )),
               ),
-            ),
-            formTextSpacer,
-            Expanded(
-              flex: 6,
-              child: products == null
-                  ? Loader(
-                      color: Colors.orange,
-                      background: HorticadeTheme.scaffoldBackground!,
-                    )
-                  : (products.isEmpty
-                      ? const Text(
-                          'No Products Found',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        )
-                      : ListView.builder(
-                          key: Key('product_order_list_${products.length}'),
-                          itemCount: products.length,
-                          itemBuilder: (context, i) => ProductCard(
-                            product: products![i],
-                            onTap: () => _confirmOrder(products![i]),
-                          ),
-                        )),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

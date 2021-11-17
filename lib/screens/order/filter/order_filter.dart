@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:horticade/models/category.dart';
+import 'package:horticade/models/spec.dart';
 import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/models/product.dart';
 import 'package:horticade/models/user.dart';
@@ -17,6 +19,7 @@ class OrderFilter with ChangeNotifier {
     _filters['subCategory'] = (Product product) => true;
     _filters['fromPrice'] = (Product product) => true;
     _filters['toPrice'] = (Product product) => true;
+    _filters['specs'] = (Product product) => true;
   }
 
   set name(String name) {
@@ -51,6 +54,13 @@ class OrderFilter with ChangeNotifier {
   set toPrice(double toPrice) {
     _filters['toPrice'] =
         (Product product) => toPrice == 0.0 ? true : product.cost <= toPrice;
+
+    notifyListeners();
+  }
+
+  set specs(List<Spec> specs) {
+    _filters['specs'] = (Product product) => product.specs
+        .fold(true, (containsAll, spec) => containsAll && specs.contains(spec));
 
     notifyListeners();
   }

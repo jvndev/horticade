@@ -9,9 +9,13 @@ import 'package:provider/provider.dart';
 
 class SubCategoriesDropdownList extends StatefulWidget {
   final VoidNullSubCategoryFunc onSelect;
+  Loader? loader;
 
-  const SubCategoriesDropdownList({Key? key, required this.onSelect})
-      : super(key: key);
+  SubCategoriesDropdownList({
+    Key? key,
+    this.loader,
+    required this.onSelect,
+  }) : super(key: key);
 
   @override
   State<SubCategoriesDropdownList> createState() =>
@@ -23,15 +27,18 @@ class _SubCategoriesDropdownListState extends State<SubCategoriesDropdownList> {
 
   @override
   Widget build(BuildContext context) {
+    Loader loader = widget.loader ??
+        Loader(
+          color: Colors.orange,
+          background: HorticadeTheme.scaffoldBackground!,
+        );
+
     return FutureBuilder<List<SubCategory>>(
         future: Provider.of<Future<List<SubCategory>>>(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               !snapshot.hasData) {
-            return Loader(
-              color: Colors.orange,
-              background: HorticadeTheme.scaffoldBackground!,
-            );
+            return loader;
           } else {
             List<SubCategory> subCategories = snapshot.data!;
 
@@ -41,7 +48,7 @@ class _SubCategoriesDropdownListState extends State<SubCategoriesDropdownList> {
               decoration: const InputDecoration(
                 label: Text('Subcategory'),
               ),
-              hint: const Text('Choose a Subcategory'),
+              hint: const Text('Subcategory'),
               value: selectedSubCategory,
               items: subCategories
                   .map<DropdownMenuItem<SubCategory>>((e) => DropdownMenuItem(
