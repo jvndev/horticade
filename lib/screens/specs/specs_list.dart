@@ -4,17 +4,16 @@ import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_confirmation_dialog.dart';
 import 'package:provider/provider.dart';
 
-class ProductCreateSpecsList extends StatefulWidget {
+class SpecsList extends StatefulWidget {
   final List<Spec<dynamic>> selectedSpecs; // initially checked specs
 
-  const ProductCreateSpecsList({Key? key, required this.selectedSpecs})
-      : super(key: key);
+  const SpecsList({Key? key, required this.selectedSpecs}) : super(key: key);
 
   @override
-  State<ProductCreateSpecsList> createState() => _ProductCreateSpecsListState();
+  State<SpecsList> createState() => _SpecsListState();
 }
 
-class _ProductCreateSpecsListState extends State<ProductCreateSpecsList> {
+class _SpecsListState extends State<SpecsList> {
   final Map<Spec<dynamic>, bool> checked = {};
 
   @override

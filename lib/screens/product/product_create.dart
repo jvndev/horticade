@@ -10,7 +10,7 @@ import 'package:horticade/models/user.dart';
 import 'package:horticade/screens/camera/camera.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
 import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
-import 'package:horticade/screens/product/product_create_specs.dart';
+import 'package:horticade/screens/specs/specs.dart';
 import 'package:horticade/services/database.dart';
 import 'package:horticade/services/image.dart';
 import 'package:horticade/shared/constants.dart';
@@ -233,7 +233,7 @@ class _ProductCreateState extends State<ProductCreate> {
                                                   await showDialog<List<Spec>>(
                                                         context: context,
                                                         builder: (context) {
-                                                          return ProductCreateSpecs(
+                                                          return Specs(
                                                             selectedSpecs:
                                                                 _selectedSpecs,
                                                             subCategory:
