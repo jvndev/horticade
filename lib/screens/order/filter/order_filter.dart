@@ -59,8 +59,19 @@ class OrderFilter with ChangeNotifier {
   }
 
   set specs(List<Spec> specs) {
-    _filters['specs'] = (Product product) => product.specs
-        .fold(true, (containsAll, spec) => containsAll && specs.contains(spec));
+    _filters['specs'] = (Product product) {
+      bool containsSpecs = true;
+
+      if (specs.isEmpty) {
+        return true;
+      }
+
+      for (Spec spec in specs) {
+        containsSpecs &= product.specs.contains(spec);
+      }
+
+      return containsSpecs;
+    };
 
     notifyListeners();
   }

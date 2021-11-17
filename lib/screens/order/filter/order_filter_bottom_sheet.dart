@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:horticade/models/category.dart';
 import 'package:horticade/models/product.dart';
+import 'package:horticade/models/spec.dart';
+import 'package:horticade/models/sub_category.dart';
 import 'package:horticade/screens/category/select/categories_dropdown.dart';
 import 'package:horticade/screens/category/select/sub_categories_dropdown.dart';
 import 'package:horticade/screens/order/filter/order_filter.dart';
+import 'package:horticade/screens/specs/specs.dart';
 import 'package:horticade/shared/constants.dart';
 import 'package:horticade/shared/loader.dart';
 import 'package:horticade/theme/horticade_theme.dart';
@@ -30,6 +33,8 @@ class _OrderFilterBottomSheetState extends State<OrderFilterBottomSheet> {
   CurrencyTextInputFormatter toTextInputFormatter =
       CurrencyTextInputFormatter(symbol: 'R');
   Category? selectedCategory;
+  SubCategory? selectedSubCategory;
+  List<Spec> selectedSpecs = [];
 
   void fromPriceFilterChanged(OrderFilter filter) {
     filter.fromPrice = fromTextInputFormatter.getUnformattedValue().toDouble();
@@ -113,8 +118,12 @@ class _OrderFilterBottomSheetState extends State<OrderFilterBottomSheet> {
                       child: selectedCategory != null
                           ? SubCategoriesDropdown(
                               category: selectedCategory!,
-                              onSelect: (subCategory) =>
-                                  widget.filter.subCategory = subCategory,
+                              onSelect: (subCategory) {
+                                widget.filter.subCategory = subCategory;
+                                setState(() {
+                                  selectedSubCategory = subCategory;
+                                });
+                              },
                               loader: Loader(
                                 color: Colors.orange,
                                 background: Colors.grey[700]!,
@@ -122,6 +131,40 @@ class _OrderFilterBottomSheetState extends State<OrderFilterBottomSheet> {
                             )
                           : const SizedBox(),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    selectedSubCategory != null
+                        ? Expanded(
+                            flex: 4,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.grey[500],
+                              ),
+                              onPressed: () async {
+                                List<Spec>? ret = await showDialog<List<Spec>>(
+                                        context: context,
+                                        builder: (context) {
+                                          return Specs(
+                                            subCategory: selectedSubCategory!,
+                                            selectedSpecs: selectedSpecs,
+                                          );
+                                        }) ??
+                                    selectedSpecs;
+                                setState(() {
+                                  selectedSpecs = ret;
+                                });
+                                widget.filter.specs = selectedSpecs;
+                              },
+                              icon: const Icon(Icons.link),
+                              label: const Text(
+                                'Specs',
+                                style: HorticadeTheme.actionButtonTextStyle,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
                 TypeAheadField<String>(
